@@ -1,25 +1,34 @@
-import { useState } from 'react'
-// import { useNavigate } from 'react-router-dom';
-
+import { SetStateAction, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Bag from "../icons/shopping-bag.png"
 import Logo from './Logo';
-
 import CartButton from './CartButton';
 import { useShoppingCart } from '../context/ShoppingCartContext';
+import ButtonComponent from './ButtonComponent';
 
-const Navbar = () => {
-
-  const {openCart, cartQuantity } = useShoppingCart()
+const Navbar = ({ setSearchQuery }:any) => {
+  const { openCart, cartQuantity } = useShoppingCart();
   const [isOpen, setIsOpen] = useState(false);
-  // const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+
+  const navigate = useNavigate();
 
   const handleCart = () => {
     openCart();
   };
 
+  const handleNavigation = (str:string) => {
+    navigate(`/home/${str}`);
+  };
+
+  const handleSearchChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+    setSearch(e.target.value);
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <nav className="flex items-center justify-between flex-wrap p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6 lg:mr-72">
+      <div className="flex items-center flex-shrink-0 text-gray-600 mr-6 lg:mr-72">
         <Logo />
       </div>
       <div className="block md:hidden">
@@ -47,22 +56,32 @@ const Navbar = () => {
         className={`w-full block flex-grow md:flex md:items-center md:w-auto ${isOpen ? "block" : "hidden"}`}
       >
         <div className="text-sm md:flex-grow">
-          <a href="#" className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4">
-            Home
-          </a>
-          <a href="#" className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4">
-            Living
-          </a>
-          <a href="#" className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4">
-            Dining
-          </a>
-          <a href="#" className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4">
-            Bedroom
-          </a>
+          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("") }}>
+          <ButtonComponent value="Home" bg=""/>
+          </div>
+          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("all products") }}>
+            <ButtonComponent value="All Products" />
+          </div>
+          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("Living Room") }}>
+            <ButtonComponent value="Living" />
+          </div>
+          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("Dining") }}>
+            <ButtonComponent value="Dining" />
+          </div>
+          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("Bedroom") }}>
+            <ButtonComponent value="Bedroom" />
+          </div>
         </div>
         <div className='flex flex-row gap-2'>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={handleSearchChange}
+            className="border border-gray-300 rounded-md p-2"
+          />
           <div onClick={handleCart}>
-          <CartButton src={Bag} quantity = {cartQuantity}/>
+            <CartButton src={Bag} quantity={cartQuantity} />
           </div>
           <button className="rounded-lg inline-flex items-center bg-amber-500 border-0 py-2 px-4 text-white">
             Login
@@ -73,4 +92,4 @@ const Navbar = () => {
   );
 }
 
-export default Navbar
+export default Navbar;

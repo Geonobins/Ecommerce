@@ -3,27 +3,50 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useShoppingCart } from '../context/ShoppingCartContext'
 import CartItem from './CartItem'
-import data from '../data/data'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 
-
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+  image: string[];
+  availability: number;
+  reviews: { id: number; user: string; rating: number; review: string; date: string }[];
+  category: string[];
+  subcategory: string;
+}
 
 type ShoppinCartProps = {
     isOpen: boolean
 }
 export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
-  
+  const [products, setProducts] = useState<Product[]>([]);
   const { getItemQuantity, closeCart,cartItems} = useShoppingCart();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+      .then((response) => {
+        setProducts(response.data.products);
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
+  }, []);
+
   const price=  cartItems.reduce((total, cartItem) => {
-    const item = data.find(i => i.id === cartItem.id)
+    const item = products.find(i => i.id === cartItem.id)
     return total + (item?.price || 0) * cartItem.quantity
   }, 0)
 
 
   const handleCheckout= () =>{
-    navigate("/home/products/checkout")
+    navigate("/home/products/checkout",{ state: { totalPrice: price } })
     closeCart()
   }
   
@@ -78,12 +101,11 @@ export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                   <div className="mt-6" onClick={handleCheckout}>
-                    <a
-                      href="#"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                    <div
+                      className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 cursor-pointer"
                     >
                       Checkout
-                    </a>
+                    </div>
                   </div>
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p>

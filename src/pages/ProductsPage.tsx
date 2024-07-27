@@ -1,28 +1,85 @@
-import Card from "../components/Card";
-import Navbar from "../components/Navbar";
-import data from "../data/data"
-const ProductsPage = () => {
-  const products = data
-  return (
-    <>
-      <Navbar/>
-      <div className="flex flex-row flex-wrap gap-3 px-10">
-        {products.map((product) => (
+import { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
+import axios from 'axios';
+import Card from '../components/Card';
+import { useParams } from 'react-router-dom';
 
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+  image: string[];
+  availability: number;
+  reviews: { id: number; user: string; rating: number; review: string; date: string }[];
+  category: string[];
+  subcategory: string;
+}
+
+export const ProductsPage = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState(''); // State for sorting order
+
+  const { navStatus } = useParams<{ navStatus: string }>();
+
+  useEffect(() => {
+    axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+      .then((response) => {
+        setProducts(response.data.products);
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
+  }, []);
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value);
+  };
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortOrder === 'lowToHigh') {
+      return a.price - b.price;
+    } else if (sortOrder === 'highToLow') {
+      return b.price - a.price;
+    } else {
+      return 0;
+    }
+  });
+
+  const filteredProducts = sortedProducts.filter(product =>
+    (navStatus === "all products" || product.category.includes(navStatus)) &&
+    (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  return (
+    <div className='flex flex-col '>
+      <Navbar setSearchQuery={setSearchQuery} />
+      
+      <div className="sort-dropdown px-11">
+        <select value={sortOrder} onChange={handleSortChange}>
+          <option value="">Sort by Price</option>
+          <option value="lowToHigh">Low to High</option>
+          <option value="highToLow">High to Low</option>
+        </select>
+      </div>
+
+      <div className="flex flex-row flex-wrap gap-3 px-10">
+        {filteredProducts.map((product) => (
           <Card
             key={product.id}
             id={product.id}
             name={product.name}
             price={product.price}
             description={product.description}
-            image={product.image}
-            src={product.src}
+            image={product.thumbnail}
           />
-
         ))}
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default ProductsPage
+export default ProductsPage;
