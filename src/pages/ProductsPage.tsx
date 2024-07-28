@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import axios from 'axios';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
+import { FooterComponent } from '@/components/FooterComponent';
 
 interface Product {
   id: number;
@@ -22,7 +23,7 @@ export const ProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState(''); // State for sorting order
 
-  const { navStatus } = useParams<{ navStatus: string }>();
+  const { navStatus } = useParams<{ navStatus: string | undefined | any }>();
 
   useEffect(() => {
     axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
@@ -55,7 +56,8 @@ export const ProductsPage = () => {
   );
 
   return (
-    <div className='flex flex-col '>
+    <div className='flex flex-col min-h-screen '>
+      <div className='flex-1'>
       <Navbar setSearchQuery={setSearchQuery} />
       
       <div className="sort-dropdown px-11">
@@ -66,7 +68,7 @@ export const ProductsPage = () => {
         </select>
       </div>
 
-      <div className="flex flex-row flex-wrap gap-3 px-10">
+      <div className="flex flex-row flex-wrap gap-3 px-10 items-center justify-center">
         {filteredProducts.map((product) => (
           <Card
             key={product.id}
@@ -78,6 +80,8 @@ export const ProductsPage = () => {
           />
         ))}
       </div>
+      </div>
+      <FooterComponent/>
     </div>
   );
 }

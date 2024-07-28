@@ -1,26 +1,38 @@
 "use client";
 import Navbar from "@/components/Navbar"
-import { Link } from "react-router-dom"
 import { Carousel } from "flowbite-react";
+import Banner1 from "../images/Banner1.png"
+import Banner2 from "../images/Banner2.png"
+import Banner3 from "../images/Banner3.png"
+import Banner4 from "../images/Banner4.png"
+import { ProductCarousel } from "@/components/ProductCarousel";
+import { FooterComponent } from "@/components/FooterComponent";
+
 
 function HomePage() {
-  
+
 
   return (
     <>
-    <Navbar/>
-    <div className="h-96 sm:h-64 xl:h-80 2xl:h-96">
-      <Carousel slideInterval={2000} slide={true}>
-        <img src="https://m.media-amazon.com/images/I/51wvJ4LiuBL._SX522_.jpg" alt="..." />
-        <img src="https://images.pexels.com/photos/189333/pexels-photo-189333.jpeg" alt="..." />
-        <img src="https://m.media-amazon.com/images/I/51wvJ4LiuBL._SX522_.jpg" alt="..." />
-        <img src="https://m.media-amazon.com/images/I/51wvJ4LiuBL._SX522_.jpg" alt="..." />
-        <img src="https://m.media-amazon.com/images/I/51wvJ4LiuBL._SX522_.jpg" alt="..." />
-      </Carousel>
-    </div>
-    
-      <h1 className='text-4x1 text-blue-500 mb-10'>Ecommerce Project</h1>
-      <Link to='/home/all products' className="p-5 bg-blue-500">Products</Link>
+      <Navbar />
+      <center>
+      <div className="h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%]">
+        <Carousel slideInterval={2000} slide={true}>
+          <img src={Banner1} alt="..." className="w-full h-full object-cover" />
+          <img src={Banner2} alt="..." className="w-full h-full object-cover" />
+          <img src={Banner3} alt="..." className="w-full h-full object-cover" />
+          <img src={Banner4} alt="..." className="w-full h-full object-cover" />
+
+        </Carousel>
+      </div>
+      </center>
+      <div className="mx-24">
+          <h1 className='text-zinc-500 mr-2 py-8 font-serif text-2xl ' >Trending Products</h1>
+          <ProductCarousel subcategory=""/>
+        
+      </div>  
+    <div/>
+    <FooterComponent/>
     </>
   )
 }

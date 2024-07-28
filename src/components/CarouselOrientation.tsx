@@ -15,7 +15,7 @@ export function CarouselOrientation({ reviews }: any) {
         align: "center",
       }}
       orientation="horizontal"
-      className="w-full max-w-xs"
+      className="w-full max-w-[75%] "
     >
       <CarouselContent className="-mt-1 h-[200px]">
         {reviews.map((review: { id: Key | null | undefined; user: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; rating: number; review: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; date: string | number | Date; }) => (
