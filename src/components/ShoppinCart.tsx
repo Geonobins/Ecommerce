@@ -46,7 +46,7 @@ export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
 
 
   const handleCheckout= () =>{
-    navigate("/home/products/checkout",{ state: { totalPrice: price } })
+    navigate("/products/checkout",{ state: { totalPrice: price } })
     closeCart()
   }
   

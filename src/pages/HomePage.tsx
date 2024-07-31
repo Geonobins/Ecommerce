@@ -18,10 +18,10 @@ function HomePage() {
       <center>
       <div className="h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%]">
         <Carousel slideInterval={2000} slide={true}>
-          <img src={Banner1} alt="..." className="w-full h-full object-cover" />
-          <img src={Banner2} alt="..." className="w-full h-full object-cover" />
-          <img src={Banner3} alt="..." className="w-full h-full object-cover" />
-          <img src={Banner4} alt="..." className="w-full h-full object-cover" />
+          <img src={Banner1} alt="..." className="w-full h-full object-fill" />
+          <img src={Banner2} alt="..." className="w-full h-full object-fill" />
+          <img src={Banner3} alt="..." className="w-full h-full object-fill" />
+          <img src={Banner4} alt="..." className="w-full h-full object-fill" />
 
         </Carousel>
       </div>

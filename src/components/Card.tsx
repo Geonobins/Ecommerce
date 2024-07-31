@@ -3,32 +3,48 @@ import { useShoppingCart } from '../context/ShoppingCartContext';
 import CartButton from './CartButton';
 import ButtonComponent from './ButtonComponent';
 import Cart from '../icons/shopping-cart.png';
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 const Card = (props: any) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate(`/home/products/${props.id}`);
-  };
+ 
 
+  
+  const { isAuthenticated } = useAuth0(); // Check if user is authenticated
+
+  const handleClick = () => {
+    navigate(`/products/${props.id}`);
+  };
+  
   const handleBuyNow = (event: { stopPropagation: () => void; }) => {
     event.stopPropagation(); // Prevents the event from bubbling up to the parent div
-    navigate(`/home/products/${props.id}/checkout`, { state: { totalPrice: props.price } });
+    if (isAuthenticated) {
+      navigate(`/products/${props.id}/checkout`, { state: { totalPrice: props.price } });
+    } else {
+      alert('Please log in to proceed with the purchase.');
+    }
   };
-
   const { getItemQuantity,increaseItemQuantity, decreaseItemQuantity} = useShoppingCart()
   const quantity = getItemQuantity(props.id);
 
   const handleDecreaseCart = (event: { stopPropagation: () => void; }) => {
-    event.stopPropagation(); 
-    decreaseItemQuantity(props.id)
-  }
+    event.stopPropagation();
+    if (isAuthenticated) {
+      decreaseItemQuantity(props.id);
+    } 
+    
+  };
 
-  const handleIncreaseCart = (event: { stopPropagation: () => void; }) =>{
-    event.stopPropagation(); 
-    increaseItemQuantity(props.id)
-  }
+  const handleIncreaseCart = (event: { stopPropagation: () => void; }) => {
+    event.stopPropagation();
+    if (isAuthenticated) {
+      increaseItemQuantity(props.id);
+    } else {
+      alert("Login to manage cart")
+    }
+  };
   return (
     <div
       className="w-60 p-2 min-h-96 mx-1 flex flex-col justify-between bg-white rounded-x1 transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl mt-4 mb-4 lg:mt-0"

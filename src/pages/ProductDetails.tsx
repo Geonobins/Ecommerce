@@ -70,7 +70,7 @@ const ProductDetails = () => {
   const handleBuyNow = () => {
     increaseItemQuantity(product.id)
 
-    navigate(`/home/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
+    navigate(`/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
   };
   
 

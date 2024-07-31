@@ -1,30 +1,42 @@
-import { SetStateAction, useState } from 'react'
+import { SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Bag from "../icons/shopping-bag.png"
+import Bag from "../icons/shopping-bag.png";
 import Logo from './Logo';
 import CartButton from './CartButton';
 import { useShoppingCart } from '../context/ShoppingCartContext';
 import ButtonComponent from './ButtonComponent';
 
-const Navbar = ({ setSearchQuery }:any) => {
+import Profile from './ProfileButton';
+import { useAuth0 } from '@auth0/auth0-react';
+
+const Navbar = ({ setSearchQuery }: any) => {
   const { openCart, cartQuantity } = useShoppingCart();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
 
+  
   const navigate = useNavigate();
 
+  const { isAuthenticated } = useAuth0();
   const handleCart = () => {
     openCart();
+    if (isAuthenticated) {
+      openCart();;
+    } else {
+      alert("Login to manage cart")
+    }
   };
 
-  const handleNavigation = (str:string) => {
-    navigate(`/home/${str}`);
+  const handleNavigation = (str: string) => {
+    navigate(`/${str}`);
   };
 
   const handleSearchChange = (e: { target: { value: SetStateAction<string>; }; }) => {
     setSearch(e.target.value);
     setSearchQuery(e.target.value);
   };
+
+  
 
   return (
     <nav className="flex items-center justify-between flex-wrap p-6">
@@ -57,7 +69,7 @@ const Navbar = ({ setSearchQuery }:any) => {
       >
         <div className="text-sm md:flex-grow">
           <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("") }}>
-          <ButtonComponent value="Home" bg=""/>
+            <ButtonComponent value="Home" bg="" />
           </div>
           <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("all products") }}>
             <ButtonComponent value="All Products" />
@@ -72,20 +84,30 @@ const Navbar = ({ setSearchQuery }:any) => {
             <ButtonComponent value="Bedroom" />
           </div>
         </div>
-        <div className='flex flex-row gap-2'>
+        <div className='flex flex-row gap-4'>
           <input
             type="text"
             placeholder="Search..."
             value={search}
             onChange={handleSearchChange}
             className="border border-gray-300 rounded-md p-2"
-          />
+            />
+            <Profile/>
           <div onClick={handleCart}>
             <CartButton src={Bag} quantity={cartQuantity} />
           </div>
-          {/* <button className="rounded-lg inline-flex items-center bg-amber-500 border-0 py-2 px-4 text-white">
-            Login
-          </button> */}
+          {/* <div onClick={handleLogin}>
+            <ButtonComponent value={user ? "Logout" : "Login"} bg="bg-gray-200" />
+          </div>
+          {user && (
+            <div>
+              <h2>{user.name}</h2>
+            </div>
+          )}
+
+          <div onClick={handleLogout}>
+            <ButtonComponent value="Logout" bg="bg-gray-200" />
+          </div> */}
         </div>
       </div>
     </nav>
