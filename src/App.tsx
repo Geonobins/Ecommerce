@@ -8,6 +8,7 @@ import { ShoppingCartProvider } from './context/ShoppingCartContext';
 import NotFoundPage from './pages/NotFoundPage'
 import ProductsPage from './pages/ProductsPage';
 import ProfilesPage from './pages/ProfilesPage';
+import AddProductPage from './pages/AddProductPage';
 
 
 
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/products/:id/checkout" element={<CheckoutPage />} />
           <Route path="/products/checkout" element={<CheckoutPage />} />
           <Route path="/:navStatus" element={<ProductsPage/>}/>
+          <Route path="/admin/:action" element={<AddProductPage/>}/>
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </ShoppingCartProvider>

@@ -1,63 +1,51 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import { useEffect, useState } from 'react';
+
 import { ChevronDownIcon, LogOutIcon } from 'lucide-react';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { useNavigate } from 'react-router-dom';
 
 
+
 const ProfileButton = () => {
 
-    const [user, setUser] = useState<any>(null); // Initialize user as null
+    // const [user, setUser] = useState<any>(null); // Initialize user as null
 
-    const { loginWithRedirect, logout, user: authUser, isAuthenticated } = useAuth0();
+    const { loginWithRedirect, logout, user, isAuthenticated , isLoading} = useAuth0();
     const navigate = useNavigate();
-     // Load user from local storage on component mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      console.log(storedUser)
-      try {
-        setUser(JSON.parse(storedUser)); // Parse stored user data
-      } catch (error) {
-        console.error("Failed to parse user data from local storage:", error);
-      }
-    }
-  }, []);
-  const handleLogin = async () => {
-    if (!isAuthenticated) {
-      try {
-        await loginWithRedirect();
-        // Use the authUser directly
-        setUser(authUser);
-        // localStorage.setItem("user", JSON.stringify(authUser)); // Store user info in local storage
-        
-      } catch (error) {
-        console.error(error);
-      }
-    }
+   
+  const handleLogin =  () => {
+    
+    loginWithRedirect()
   };
 
   const handleLogout = async () => {
     try {
-      await logout({ logoutParams: { returnTo: window.location.origin } });
-      setUser(null);
-      localStorage.removeItem("user"); // Remove user info from local storage on logout
+      logout({ logoutParams: { returnTo: window.location.origin } });
+    
     } catch (error) {
       console.error(error);
     }
   };
 
- // Update user state if authUser changes
- useEffect(() => {
-    if (authUser) {
-      setUser(authUser);
-      localStorage.setItem("user", JSON.stringify(authUser)); // Update local storage
-    }
-  }, [authUser]);
+//  // Update user state if authUser changes
+//  useEffect(() => {
+//     if (authUser) {
+//       setUser(authUser);
+//       localStorage.setItem("user", JSON.stringify(authUser)); // Update local storage
+//     }
+//   }, [authUser]);
 
+  if (isLoading){
+   return(
+    <div>Loading</div>
+   )
+  }
   
+  // console.log(checkPermissions(user))
   return (
+    
+    (
     <Popover className="relative bg-white ">
       <PopoverButton className="flex">
         <UserCircleIcon className='size-10 text-gray-300 hover:text-gray-500'/>
@@ -93,6 +81,7 @@ const ProfileButton = () => {
         
       </PopoverPanel>
     </Popover>
+    )
   )
 }
 

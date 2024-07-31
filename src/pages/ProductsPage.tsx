@@ -4,6 +4,8 @@ import axios from 'axios';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
 import { FooterComponent } from '@/components/FooterComponent';
+import { useAuth0 } from '@auth0/auth0-react';
+import AddProductButton from '@/components/AddProductButton';
 
 interface Product {
   id: number;
@@ -24,6 +26,8 @@ export const ProductsPage = () => {
   const [sortOrder, setSortOrder] = useState(''); // State for sorting order
 
   const { navStatus } = useParams<{ navStatus: string | undefined | any }>();
+
+  const {user} = useAuth0();
 
   useEffect(() => {
     axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
@@ -69,6 +73,7 @@ export const ProductsPage = () => {
       </div>
 
       <div className="flex flex-row flex-wrap gap-3 px-10 items-center justify-center">
+        {user?.nickname==="admin" && <AddProductButton/>}
         {filteredProducts.map((product) => (
           <Card
             key={product.id}

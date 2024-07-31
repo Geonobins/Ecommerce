@@ -1,7 +1,7 @@
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Sidebar } from 'flowbite-react'
 import { ListOrderedIcon } from 'lucide-react';
-import React from 'react'
+
 
 const ProfilesPage = () => {
     return (
