@@ -2,29 +2,40 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { FileInput, Label, Textarea } from "flowbite-react";
 
+// Define the product interface
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    thumbnail: string;
+    image: string[];
+    category: string;
+    subcategory: string;
+}
+
 const AddProductPage = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
-    const [price, setPrice] = useState("");
+    const [price, setPrice] = useState<number | undefined>(undefined);
     const [subcategory, setSubcategory] = useState("");
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState<File[]>([]);
+    const [submittedProduct, setSubmittedProduct] = useState<Product | null>(null);
 
-    let product;
-    const handleFormSubmit = (e:any) => {
+    const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-         product = {
+        const product: Product = {
             id: Math.floor(Math.random() * 1000), // or use any other unique identifier
             name: title,
             description: description,
-            price: parseFloat(price),
-            thumbnail: images[0] ? images[0].name : "", // Assuming 'name' contains the filename
-            image: images.map(file => file.name), // Array of filenames
+            price: price || 0,
+            thumbnail: images[0] ? URL.createObjectURL(images[0]) : "", // Create a URL for the image
+            image: images.map(file => URL.createObjectURL(file)), // Array of image URLs
             category: category,
             subcategory: subcategory,
         };
-        console.log(product);
-        // Handle the object as needed, e.g., send it to a server
+        setSubmittedProduct(product);
     };
 
     return (
@@ -79,7 +90,7 @@ const AddProductPage = () => {
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="price"
                                     value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
+                                    onChange={(e) => setPrice(parseFloat(e.target.value))}
                                 />
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
@@ -108,9 +119,22 @@ const AddProductPage = () => {
                             <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                         </div>
                     </form>
-                    {(product?.image)?
-                    <img src={product.thumbnail} alt={product.thumbnail}/>:<>{product?.thumbnail}</>
-                    }
+                    {submittedProduct && (
+                        <div className="mt-10">
+                            <h2 className="text-2xl mb-4">Submitted Product</h2>
+                            <p><strong>Name:</strong> {submittedProduct.name}</p>
+                            <p><strong>Description:</strong> {submittedProduct.description}</p>
+                            <p><strong>Category:</strong> {submittedProduct.category}</p>
+                            <p><strong>Sub-category:</strong> {submittedProduct.subcategory}</p>
+                            <p><strong>Price:</strong> ${submittedProduct.price}</p>
+                            <p><strong>Images:</strong></p>
+                            <div className="flex space-x-4">
+                                {submittedProduct.image.map((img, index) => (
+                                    <img key={index} src={img} alt={`Product ${index}`} className="w-32 h-32 object-cover" />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>
