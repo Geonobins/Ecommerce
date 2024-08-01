@@ -63,7 +63,8 @@ const ProductDetails = () => {
   const id = Number(productId);
 
   const { increaseItemQuantity, openCart } = useShoppingCart()
-  const product = products.find((product) => product.id === id);
+  const product = products.find((product) => product.id == id);
+ 
 
 
   if (!product) {
@@ -88,7 +89,7 @@ const ProductDetails = () => {
 
     navigate(`/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
   };
-  
+
 
 
   return (
@@ -144,7 +145,7 @@ const ProductDetails = () => {
         </div>
         <div className="mx-24">
           <h1 className='text-zinc-500 mr-2 py-8 font-serif text-2xl ' >Related Products</h1>
-          <ProductCarousel category={product.subcategory}/>
+          <ProductCarousel category={product.subcategory} />
         </div>
       </div>
       <FooterComponent />

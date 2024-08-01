@@ -57,7 +57,7 @@ const ProfileButton = () => {
           {user ? 
             <div onClick={()=>{navigate("/profile")}}>
             <div className='cursor-pointer flex flex-col hover:text-black'>
-              <p className='text-md'>{`Hello ${user.given_name}`}</p>
+              <p className='text-md'>{`Hello ${user.nickname}`}</p>
               <p className='text-sm'>{user.email}</p>
             </div>
             <hr className='m-2'/>

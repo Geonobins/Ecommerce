@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { FileInput, Label, Textarea } from "flowbite-react";
-import { v4 as uuidv4 } from 'uuid'; // Importing UUID for unique ID generation
+
+import { addProducts, initDB } from "@/utils/db";
+
+import generateNumericUUIDNumber from "@/utils/uuid";
 
 // Define the product interface
 interface Product {
@@ -13,6 +16,8 @@ interface Product {
     image: string[];
     category: string;
     subcategory: string;
+    reviews: string[];
+    availability: number;
 }
 
 const AddProductPage = () => {
@@ -46,7 +51,7 @@ const AddProductPage = () => {
         const imageBase64Array = await Promise.all(images.map(file => fileToBase64(file)));
 
         const product: Product = {
-            id: uuidv4(), // Using UUID for unique ID
+            id: String(generateNumericUUIDNumber()), // Using UUID for unique ID
             name: title,
             description: description,
             price: price,
@@ -54,11 +59,18 @@ const AddProductPage = () => {
             image: imageBase64Array,
             category: category,
             subcategory: subcategory,
+            availability: 100,
+            reviews: []
         };
+        const db = await initDB();
+
+        addProducts(db, [product])
 
         // Now you can store the product in IndexedDB, or wherever you need
         setSubmittedProduct(product);
     };
+
+
 
     return (
         <>
