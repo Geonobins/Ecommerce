@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
-import axios from 'axios';
+// import axios from 'axios';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
 import { FooterComponent } from '@/components/FooterComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import AddProductButton from '@/components/AddProductButton';
+import { getAllProducts, initDB } from '@/utils/db';
 
 interface Product {
   id: number;
@@ -29,15 +30,32 @@ export const ProductsPage = () => {
 
   const {user} = useAuth0();
 
+  // useEffect(() => {
+  //   axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+  //     .then((response) => {
+  //       setProducts(response.data.products);
+  //     })
+  //     .catch((error) => {
+  //       console.error('There was an error!', error);
+  //     });
+  // }, []);
+
+ 
+
+  //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-      .then((response) => {
-        setProducts(response.data.products);
-      })
-      .catch((error) => {
-        console.error('There was an error!', error);
-      });
+    const fetchProductsFromDB = async () => {
+      const db = await initDB();
+      const productsFromDB = await getAllProducts(db);
+      setProducts(productsFromDB);
+    };
+
+    fetchProductsFromDB();
   }, []);
+
+
+
+  //--------------------------------------------------------------------------------------------------------------
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value);

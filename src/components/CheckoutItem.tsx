@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from 'react'
 
-import axios from 'axios'
+// import axios from 'axios'
+import { getAllProducts, initDB } from '@/utils/db'
 
 type CheckoutItemProps = {
     id: number
@@ -26,20 +27,35 @@ const  CheckoutItem = ({id, quantity} : CheckoutItemProps) => {
 
   const [products, setProducts] = useState<Product[]>([])
 
+  // useEffect(() => {
+  //   console.log('Fetching products...');
+
+  //   axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+  //     .then((response) => {
+  //       setProducts(response.data.products)
+  //       console.log('Products fetched:');
+
+  //     })
+  //     .catch((error) => {
+  //       console.error('There was an error!', error)
+  //     })
+  // }, [])
+
+
+  //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    console.log('Fetching products...');
+    const fetchProductsFromDB = async () => {
+      const db = await initDB();
+      const productsFromDB = await getAllProducts(db);
+      setProducts(productsFromDB);
+    };
 
-    axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-      .then((response) => {
-        setProducts(response.data.products)
-        console.log('Products fetched:');
+    fetchProductsFromDB();
+  }, []);
 
-      })
-      .catch((error) => {
-        console.error('There was an error!', error)
-      })
-  }, [])
 
+
+  //--------------------------------------------------------------------------------------------------------------
 
  const item = products.find(i => i.id === id);
  if (item == null) return null;

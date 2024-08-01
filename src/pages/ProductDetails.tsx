@@ -3,10 +3,11 @@ import Navbar from '../components/Navbar';
 import { useParams, useNavigate } from 'react-router-dom';
 import ButtonComponent from '../components/ButtonComponent';
 import { useShoppingCart } from '../context/ShoppingCartContext';
-import axios from 'axios';
+// import axios from 'axios';
 import { CarouselOrientation } from '@/components/CarouselOrientation';
 import { FooterComponent } from '@/components/FooterComponent';
 import { ProductCarousel } from '@/components/ProductCarousel';
+import { getAllProducts, initDB } from '@/utils/db';
 
 interface Product {
   id: number
@@ -27,19 +28,34 @@ const ProductDetails = () => {
 
   const [products, setProducts] = useState<Product[]>([])
 
+  // useEffect(() => {
+  //   console.log('Fetching products...');
+
+  //   axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+  //     .then((response) => {
+  //       setProducts(response.data.products)
+  //       console.log('Products fetched:');
+
+  //     })
+  //     .catch((error) => {
+  //       console.error('There was an error!', error)
+  //     })
+  // }, [])
+
+  //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    console.log('Fetching products...');
+    const fetchProductsFromDB = async () => {
+      const db = await initDB();
+      const productsFromDB = await getAllProducts(db);
+      setProducts(productsFromDB);
+    };
 
-    axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-      .then((response) => {
-        setProducts(response.data.products)
-        console.log('Products fetched:');
+    fetchProductsFromDB();
+  }, []);
 
-      })
-      .catch((error) => {
-        console.error('There was an error!', error)
-      })
-  }, [])
+
+
+  //--------------------------------------------------------------------------------------------------------------
 
   const navigate = useNavigate();
   const [index, setIndex] = useState(0);

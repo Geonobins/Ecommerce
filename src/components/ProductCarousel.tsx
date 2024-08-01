@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import axios from "axios";
+// import axios from "axios";
+import { getAllProducts, initDB } from "@/utils/db";
 
 
 interface Product {
@@ -49,15 +50,30 @@ export const ProductCarousel = (props? : any) => {
         }
     };
 
-    useEffect(() => {
-        axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-            .then((response) => {
-                setProducts(response.data.products);
-            })
-            .catch((error) => {
-                console.error('There was an error!', error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+    //         .then((response) => {
+    //             setProducts(response.data.products);
+    //         })
+    //         .catch((error) => {
+    //             console.error('There was an error!', error);
+    //         });
+    // }, []);
+
+    //-------------------------------------------------------------------------------------------------------
+  useEffect(() => {
+    const fetchProductsFromDB = async () => {
+      const db = await initDB();
+      const productsFromDB = await getAllProducts(db);
+      setProducts(productsFromDB);
+    };
+
+    fetchProductsFromDB();
+  }, []);
+
+
+
+  //--------------------------------------------------------------------------------------------------------------
     
     const filteredProducts = props.subcategory === ""?products: products.filter(product =>
         ( product.subcategory === props.category)

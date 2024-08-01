@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { FileInput, Label, Textarea } from "flowbite-react";
+import { v4 as uuidv4 } from 'uuid'; // Importing UUID for unique ID generation
 
 // Define the product interface
 interface Product {
-    id: number;
+    id: string;
     name: string;
     description: string;
     price: number;
@@ -23,18 +24,39 @@ const AddProductPage = () => {
     const [images, setImages] = useState<File[]>([]);
     const [submittedProduct, setSubmittedProduct] = useState<Product | null>(null);
 
-    const handleFormSubmit = (e: React.FormEvent) => {
+    // Function to convert file to Base64
+    const fileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!title || !description || !category || price === undefined || images.length === 0) {
+            alert("All fields are required");
+            return;
+        }
+
+        // Convert files to Base64
+        const imageBase64Array = await Promise.all(images.map(file => fileToBase64(file)));
+
         const product: Product = {
-            id: Math.floor(Math.random() * 1000), // or use any other unique identifier
+            id: uuidv4(), // Using UUID for unique ID
             name: title,
             description: description,
-            price: price || 0,
-            thumbnail: images[0] ? URL.createObjectURL(images[0]) : "", // Create a URL for the image
-            image: images.map(file => URL.createObjectURL(file)), // Array of image URLs
+            price: price,
+            thumbnail: imageBase64Array[0] || "", // Use the first image as the thumbnail
+            image: imageBase64Array,
             category: category,
             subcategory: subcategory,
         };
+
+        // Now you can store the product in IndexedDB, or wherever you need
         setSubmittedProduct(product);
     };
 
@@ -56,6 +78,7 @@ const AddProductPage = () => {
                                     placeholder="title"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
+                                    required
                                 />
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
@@ -66,6 +89,7 @@ const AddProductPage = () => {
                                     placeholder="description....."
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
+                                    required
                                 ></Textarea>
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
@@ -74,7 +98,9 @@ const AddProductPage = () => {
                                     className='relative z-20 w-full appearance-none rounded-lg border border-stroke dark:border-dark-3 bg-transparent py-[10px] px-5 text-dark-6 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2'
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
+                                    required
                                 >
+                                    <option value='' disabled>Select Category</option>
                                     <option value='Living Room' className='dark:bg-dark-2'>Living Room</option>
                                     <option value='Dining' className='dark:bg-dark-2'>Dining</option>
                                     <option value='Bedroom' className='dark:bg-dark-2'>Bedroom</option>
@@ -91,6 +117,7 @@ const AddProductPage = () => {
                                     placeholder="price"
                                     value={price}
                                     onChange={(e) => setPrice(parseFloat(e.target.value))}
+                                    required
                                 />
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
@@ -113,7 +140,12 @@ const AddProductPage = () => {
                                     id="images"
                                     helperText="Upload pictures of the product"
                                     multiple
-                                    onChange={(e) => setImages([...e.target.files])}
+                                    onChange={(e) => {
+                                        if (e.target.files) {
+                                            setImages([...e.target.files]);
+                                        }
+                                    }}
+                                    required
                                 />
                             </div>
                             <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>

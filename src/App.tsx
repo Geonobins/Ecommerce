@@ -9,11 +9,48 @@ import NotFoundPage from './pages/NotFoundPage'
 import ProductsPage from './pages/ProductsPage';
 import ProfilesPage from './pages/ProfilesPage';
 import AddProductPage from './pages/AddProductPage';
+import { useEffect } from 'react';
+import { addProducts, initDB } from './utils/db';
+import axios from 'axios';
 
 
 
 
 const App = () => {
+
+  // ----------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    const fetchAndStoreProducts = async () => {
+      const db = await initDB();
+      const cachedProducts = await db.getAll('products');
+
+      if (cachedProducts.length === 0) {
+        try {
+          const response = await axios.get('https://jsondummy.vercel.app/api/products?type=furniture');
+          const products = response.data.products;
+          console.log("app.tsx",products)
+          await addProducts(db, products); // Store fetched products in IndexedDB
+          console.log('Products stored in IndexedDB');
+        } catch (error) {
+          console.error('Error fetching products:', error);
+        }
+      } else {
+        console.log('Using cached products from IndexedDB');
+        console.log(cachedProducts)
+      }
+    };
+
+    fetchAndStoreProducts();
+  }, []);
+
+  
+
+  
+
+  //----------------------------------------------------------------------------------------------------------------------------
+
+
 
   return (
     <div>

@@ -5,7 +5,8 @@ import { useShoppingCart } from '../context/ShoppingCartContext'
 import CartItem from './CartItem'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
+import { getAllProducts, initDB } from '@/utils/db'
 
 
 interface Product {
@@ -29,15 +30,30 @@ export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
   const { getItemQuantity, closeCart,cartItems} = useShoppingCart();
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+  //     .then((response) => {
+  //       setProducts(response.data.products);
+  //     })
+  //     .catch((error) => {
+  //       console.error('There was an error!', error);
+  //     });
+  // }, []);
+
+  //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-      .then((response) => {
-        setProducts(response.data.products);
-      })
-      .catch((error) => {
-        console.error('There was an error!', error);
-      });
+    const fetchProductsFromDB = async () => {
+      const db = await initDB();
+      const productsFromDB = await getAllProducts(db);
+      setProducts(productsFromDB);
+    };
+
+    fetchProductsFromDB();
   }, []);
+
+
+
+  //--------------------------------------------------------------------------------------------------------------
 
   const price=  cartItems.reduce((total, cartItem) => {
     const item = products.find(i => i.id === cartItem.id)

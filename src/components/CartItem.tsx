@@ -1,7 +1,8 @@
 import ButtonComponent from './ButtonComponent';
 import { useShoppingCart } from '../context/ShoppingCartContext';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import { getAllProducts, initDB } from '@/utils/db';
 
 type CartItemProps = {
     id: number
@@ -25,18 +26,33 @@ const CartItem = ({ id, quantity }: CartItemProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const { decreaseItemQuantity, increaseItemQuantity, removeFromCart } = useShoppingCart();
     
-    useEffect(() => {
-        console.log('Fetching products...');
+    // useEffect(() => {
+    //     console.log('Fetching products...');
 
-        axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-            .then((response) => {
-                setProducts(response.data.products);
-                console.log('Products fetched:', response.data.products);
-            })
-            .catch((error) => {
-                console.error('There was an error!', error);
-            });
-    }, []);
+    //     axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
+    //         .then((response) => {
+    //             setProducts(response.data.products);
+    //             console.log('Products fetched:', response.data.products);
+    //         })
+    //         .catch((error) => {
+    //             console.error('There was an error!', error);
+    //         });
+    // }, []);
+
+    //-------------------------------------------------------------------------------------------------------
+  useEffect(() => {
+    const fetchProductsFromDB = async () => {
+      const db = await initDB();
+      const productsFromDB = await getAllProducts(db);
+      setProducts(productsFromDB);
+    };
+
+    fetchProductsFromDB();
+  }, []);
+
+
+
+  //--------------------------------------------------------------------------------------------------------------
 
     const item = products.find(i => i.id === id);
     if (item == null) return null;
