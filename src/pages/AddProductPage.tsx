@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { FileInput, Label, Textarea } from "flowbite-react";
+import { Textarea } from "flowbite-react";
 
 import { addProducts, initDB } from "@/utils/db";
 
 import generateNumericUUIDNumber from "@/utils/uuid";
+import DropBox from "@/components/DropBox";
+import { useNavigate } from "react-router-dom";
 
 // Define the product interface
 interface Product {
@@ -27,8 +29,9 @@ const AddProductPage = () => {
     const [price, setPrice] = useState<number | undefined>(undefined);
     const [subcategory, setSubcategory] = useState("");
     const [images, setImages] = useState<File[]>([]);
-    const [submittedProduct, setSubmittedProduct] = useState<Product | null>(null);
+    const [message, setMessage] = useState<string>("");
 
+    const navigate =useNavigate();
     // Function to convert file to Base64
     const fileToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
@@ -38,9 +41,28 @@ const AddProductPage = () => {
             reader.onerror = error => reject(error);
         });
     };
+    const removeImage = (name: string) => {
+        setImages((prevFiles) => prevFiles.filter(file => file.name !== name));
+      };
+      const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMessage("");
+        const selectedFiles = e.target.files;
+    
+        if (selectedFiles) {
+          for (let i = 0; i < selectedFiles.length; i++) {
+            const fileType = selectedFiles[i]?.type;
+            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+    
+            if (validImageTypes.includes(fileType)) {
+              setImages((prevFiles) => [...prevFiles, selectedFiles[i]]);
+            } else {
+              setMessage("Only images accepted");
+            }
+          }
+        }
+      };
 
     const handleFormSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
 
         if (!title || !description || !category || price === undefined || images.length === 0) {
             alert("All fields are required");
@@ -65,9 +87,7 @@ const AddProductPage = () => {
         const db = await initDB();
 
         addProducts(db, [product])
-
-        // Now you can store the product in IndexedDB, or wherever you need
-        setSubmittedProduct(product);
+        navigate("/all products")
     };
 
 
@@ -78,7 +98,7 @@ const AddProductPage = () => {
             <div className="flex items-center justify-center h-full">
                 <div className="min-w-[100%]">
                     <center><p className="text-4xl"> Add a Product</p></center>
-                    <form className="max-w-md mx-auto" onSubmit={handleFormSubmit}>
+                    <div className="max-w-md mx-auto" >
                         <div>
                             <div className="relative z-0 w-full mb-5 group">
                                 <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
@@ -144,41 +164,15 @@ const AddProductPage = () => {
                                     onChange={(e) => setSubcategory(e.target.value)}
                                 />
                             </div>
-                            <div id="fileUpload" className="max-w-md">
-                                <div className="mb-2 block">
-                                    <Label htmlFor="images" value="Images" />
-                                </div>
-                                <FileInput
-                                    id="images"
-                                    helperText="Upload pictures of the product"
-                                    multiple
-                                    onChange={(e) => {
-                                        if (e.target.files) {
-                                            setImages([...e.target.files]);
-                                        }
-                                    }}
-                                    required
-                                />
+                            
+
+                            <div>
+                                <DropBox removeImage={removeImage} handleFile={handleFile} message={message} images={images}/>
                             </div>
-                            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                            <button  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleFormSubmit}>Add Product</button>
                         </div>
-                    </form>
-                    {submittedProduct && (
-                        <div className="mt-10">
-                            <h2 className="text-2xl mb-4">Submitted Product</h2>
-                            <p><strong>Name:</strong> {submittedProduct.name}</p>
-                            <p><strong>Description:</strong> {submittedProduct.description}</p>
-                            <p><strong>Category:</strong> {submittedProduct.category}</p>
-                            <p><strong>Sub-category:</strong> {submittedProduct.subcategory}</p>
-                            <p><strong>Price:</strong> ${submittedProduct.price}</p>
-                            <p><strong>Images:</strong></p>
-                            <div className="flex space-x-4">
-                                {submittedProduct.image.map((img, index) => (
-                                    <img key={index} src={img} alt={`Product ${index}`} className="w-32 h-32 object-cover" />
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                    </div>
+                    
                 </div>
             </div>
         </>

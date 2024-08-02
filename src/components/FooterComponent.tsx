@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export function FooterComponent() {
   const navigate = useNavigate();
 
-  const handleClick =  (str: string) =>  {
+  const handleClick = (str: string) => {
     navigate(`/${str}`);
   }
   return (
@@ -18,10 +18,10 @@ export function FooterComponent() {
           <div>
             <Footer.Title title="STORE" />
             <Footer.LinkGroup col>
-              <p className="cursor-pointer" onClick={()=>{handleClick("all products")}}>All products</p>
-              <p className="cursor-pointer" onClick={()=>{handleClick("Living Room")}}>Living</p>
-              <p className="cursor-pointer" onClick={()=>{handleClick("Dining")}}>Dining</p>
-              <p className="cursor-pointer" onClick={()=>{handleClick("Dining")}}>Bedroom</p>
+              <p className="cursor-pointer" onClick={() => { handleClick("all products") }}>All products</p>
+              <p className="cursor-pointer" onClick={() => { handleClick("Living Room") }}>Living</p>
+              <p className="cursor-pointer" onClick={() => { handleClick("Dining") }}>Dining</p>
+              <p className="cursor-pointer" onClick={() => { handleClick("Dining") }}>Bedroom</p>
             </Footer.LinkGroup>
           </div>
           <div>

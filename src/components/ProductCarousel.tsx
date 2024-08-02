@@ -19,7 +19,7 @@ interface Product {
     subcategory: string;
 }
 
-export const ProductCarousel = (props? : any) => {
+export const ProductCarousel = (props?: any) => {
     const [products, setProducts] = useState<Product[]>([]);
     const responsive = {
         superLargeDesktop: {
@@ -35,7 +35,7 @@ export const ProductCarousel = (props? : any) => {
             breakpoint: { max: 1619, min: 1484 },
             items: 4
         },
-        
+
         tablet: {
             breakpoint: { max: 1484, min: 950 },
             items: 3
@@ -61,45 +61,45 @@ export const ProductCarousel = (props? : any) => {
     // }, []);
 
     //-------------------------------------------------------------------------------------------------------
-  useEffect(() => {
-    const fetchProductsFromDB = async () => {
-      const db = await initDB();
-      const productsFromDB = await getAllProducts(db);
-      setProducts(productsFromDB);
-    };
+    useEffect(() => {
+        const fetchProductsFromDB = async () => {
+            const db = await initDB();
+            const productsFromDB = await getAllProducts(db);
+            setProducts(productsFromDB);
+        };
 
-    fetchProductsFromDB();
-  }, []);
+        fetchProductsFromDB();
+    }, []);
 
 
 
-  //--------------------------------------------------------------------------------------------------------------
-    
-    const filteredProducts = props.subcategory === ""?products: products.filter(product =>
-        ( product.subcategory === props.category)
-      );
-      
+    //--------------------------------------------------------------------------------------------------------------
+
+    const filteredProducts = props.subcategory === "" ? products : products.filter(product =>
+        (product.subcategory === props.category)
+    );
+
 
     return (
         <div>
-            <Carousel 
-                
-                swipeable={true} 
-                    draggable={true}
-                    showDots={true}
-                    responsive={responsive}
-                    ssr={true} // means to render carousel on server-side.
-                    infinite={false}
-                    autoPlaySpeed={1000}
-                    keyBoardControl={true}
-                    customTransition="all .5"
-                    transitionDuration={500}
-                    containerClass="carousel-container"
-                    removeArrowOnDeviceType={["tablet", "mobile"]}
-                    partialVisible={true} 
-                    
-                    dotListClass="custom-dot-list-style"
-                    itemClass="pr-1">
+            <Carousel
+
+                swipeable={true}
+                draggable={true}
+                showDots={true}
+                responsive={responsive}
+                ssr={true} // means to render carousel on server-side.
+                infinite={false}
+                autoPlaySpeed={1000}
+                keyBoardControl={true}
+                customTransition="all .5"
+                transitionDuration={500}
+                containerClass="carousel-container"
+                removeArrowOnDeviceType={["tablet", "mobile"]}
+                partialVisible={true}
+
+                dotListClass="custom-dot-list-style"
+                itemClass="pr-1">
                 {filteredProducts.slice(0, 10).map((product) => (
                     <Card
                         key={product.id}

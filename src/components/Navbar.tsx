@@ -14,7 +14,7 @@ const Navbar = ({ setSearchQuery }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
 
-  
+
   const navigate = useNavigate();
 
   const { isAuthenticated } = useAuth0();
@@ -36,7 +36,7 @@ const Navbar = ({ setSearchQuery }: any) => {
     setSearchQuery(e.target.value);
   };
 
-  
+
 
   return (
     <nav className="flex items-center justify-between flex-wrap p-6">
@@ -91,8 +91,8 @@ const Navbar = ({ setSearchQuery }: any) => {
             value={search}
             onChange={handleSearchChange}
             className="border border-gray-300 rounded-md p-2"
-            />
-            <Profile/>
+          />
+          <Profile />
           <div onClick={handleCart}>
             <CartButton src={Bag} quantity={cartQuantity} />
           </div>

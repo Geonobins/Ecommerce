@@ -9,6 +9,12 @@ import {
 import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 export function CarouselOrientation({ reviews }: any) {
+
+  if (reviews.length===0){
+    return(
+      <div>No reviews Yet</div>
+    )
+  }
   return (
     <Carousel
       opts={{

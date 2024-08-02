@@ -28,7 +28,7 @@ export const ProductsPage = () => {
 
   const { navStatus } = useParams<{ navStatus: string | undefined | any }>();
 
-  const {user} = useAuth0();
+  const { user } = useAuth0();
 
   // useEffect(() => {
   //   axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
@@ -40,7 +40,7 @@ export const ProductsPage = () => {
   //     });
   // }, []);
 
- 
+
 
   //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
@@ -80,31 +80,31 @@ export const ProductsPage = () => {
   return (
     <div className='flex flex-col min-h-screen '>
       <div className='flex-1'>
-      <Navbar setSearchQuery={setSearchQuery} />
-      
-      <div className="sort-dropdown px-11">
-        <select value={sortOrder} onChange={handleSortChange}>
-          <option value="">Sort by Price</option>
-          <option value="lowToHigh">Low to High</option>
-          <option value="highToLow">High to Low</option>
-        </select>
-      </div>
+        <Navbar setSearchQuery={setSearchQuery} />
 
-      <div className="flex flex-row flex-wrap gap-3 px-10 items-center justify-center">
-        {user?.nickname==="admin" && <AddProductButton/>}
-        {filteredProducts.map((product) => (
-          <Card
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            description={product.description}
-            image={product.thumbnail}
-          />
-        ))}
+        <div className="sort-dropdown px-11">
+          <select value={sortOrder} onChange={handleSortChange}>
+            <option value="">Sort by Price</option>
+            <option value="lowToHigh">Low to High</option>
+            <option value="highToLow">High to Low</option>
+          </select>
+        </div>
+
+        <div className="flex flex-row flex-wrap gap-3 px-10 items-center justify-center">
+          {user?.nickname === "admin" && <AddProductButton />}
+          {filteredProducts.map((product) => (
+            <Card
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              description={product.description}
+              image={product.thumbnail}
+            />
+          ))}
+        </div>
       </div>
-      </div>
-      <FooterComponent/>
+      <FooterComponent />
     </div>
   );
 }

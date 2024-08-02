@@ -23,11 +23,11 @@ interface Product {
 }
 
 type ShoppinCartProps = {
-    isOpen: boolean
+  isOpen: boolean
 }
-export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
+export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
   const [products, setProducts] = useState<Product[]>([]);
-  const { getItemQuantity, closeCart,cartItems} = useShoppingCart();
+  const { getItemQuantity, closeCart, cartItems } = useShoppingCart();
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -55,17 +55,17 @@ export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
 
   //--------------------------------------------------------------------------------------------------------------
 
-  const price=  cartItems.reduce((total, cartItem) => {
+  const price = cartItems.reduce((total, cartItem) => {
     const item = products.find(i => i.id === cartItem.id)
     return total + (item?.price || 0) * cartItem.quantity
   }, 0)
 
 
-  const handleCheckout= () =>{
-    navigate("/products/checkout",{ state: { totalPrice: price } })
+  const handleCheckout = () => {
+    navigate("/products/checkout", { state: { totalPrice: price } })
     closeCart()
   }
-  
+
   return (
     <Dialog open={isOpen} onClose={closeCart} className="relative z-10">
       <DialogBackdrop
@@ -102,7 +102,7 @@ export default function ShoppingCart( {isOpen} : ShoppinCartProps) {
                       <ul role="list" className="-my-6 divide-y divide-gray-200">
                         {cartItems.map((product) => (
                           <li key={product.id} className="flex py-6">
-                            <CartItem id={product.id} quantity={getItemQuantity(product.id)}/>
+                            <CartItem id={product.id} quantity={getItemQuantity(product.id)} />
                           </li>
                         ))}
                       </ul>

@@ -25,7 +25,7 @@ interface Product {
 const CartItem = ({ id, quantity }: CartItemProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const { decreaseItemQuantity, increaseItemQuantity, removeFromCart } = useShoppingCart();
-    
+
     // useEffect(() => {
     //     console.log('Fetching products...');
 
@@ -40,19 +40,19 @@ const CartItem = ({ id, quantity }: CartItemProps) => {
     // }, []);
 
     //-------------------------------------------------------------------------------------------------------
-  useEffect(() => {
-    const fetchProductsFromDB = async () => {
-      const db = await initDB();
-      const productsFromDB = await getAllProducts(db);
-      setProducts(productsFromDB);
-    };
+    useEffect(() => {
+        const fetchProductsFromDB = async () => {
+            const db = await initDB();
+            const productsFromDB = await getAllProducts(db);
+            setProducts(productsFromDB);
+        };
 
-    fetchProductsFromDB();
-  }, []);
+        fetchProductsFromDB();
+    }, []);
 
 
 
-  //--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
     const item = products.find(i => i.id === id);
     if (item == null) return null;
@@ -90,10 +90,10 @@ const CartItem = ({ id, quantity }: CartItemProps) => {
                 <div className="flex flex-1 items-end justify-between text-sm">
                     <p className="text-gray-500">Qty {quantity}</p>
                     <div onClick={handleIncrease}>
-                        <ButtonComponent value="+" bg="bg-gray-300"/>
+                        <ButtonComponent value="+" bg="bg-gray-300" />
                     </div>
                     <div onClick={handleDecrease}>
-                        <ButtonComponent value="-" bg="bg-gray-300"/>
+                        <ButtonComponent value="-" bg="bg-gray-300" />
                     </div>
                     <div className="flex">
                         <button type="button" onClick={handleRemove} className="font-medium text-indigo-600 hover:text-indigo-500">

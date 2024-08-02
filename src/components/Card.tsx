@@ -9,15 +9,15 @@ import { useAuth0 } from '@auth0/auth0-react';
 const Card = (props: any) => {
   const navigate = useNavigate();
 
- 
 
-  
+
+
   const { isAuthenticated } = useAuth0(); // Check if user is authenticated
 
   const handleClick = () => {
     navigate(`/products/${props.id}`);
   };
-  
+
   const handleBuyNow = (event: { stopPropagation: () => void; }) => {
     event.stopPropagation(); // Prevents the event from bubbling up to the parent div
     if (isAuthenticated) {
@@ -26,15 +26,15 @@ const Card = (props: any) => {
       alert('Please log in to proceed with the purchase.');
     }
   };
-  const { getItemQuantity,increaseItemQuantity, decreaseItemQuantity} = useShoppingCart()
+  const { getItemQuantity, increaseItemQuantity, decreaseItemQuantity } = useShoppingCart()
   const quantity = getItemQuantity(props.id);
 
   const handleDecreaseCart = (event: { stopPropagation: () => void; }) => {
     event.stopPropagation();
     if (isAuthenticated) {
       decreaseItemQuantity(props.id);
-    } 
-    
+    }
+
   };
 
   const handleIncreaseCart = (event: { stopPropagation: () => void; }) => {
@@ -61,14 +61,14 @@ const Card = (props: any) => {
 
       <div className="flex items-center justify-center mb-3 gap-2">
         <div onClick={handleBuyNow}>
-        <ButtonComponent value="Buy Now" bg="bg-gray-300" />
+          <ButtonComponent value="Buy Now" bg="bg-gray-300" />
         </div>
         <div onClick={handleIncreaseCart}>
-        <CartButton quantity={quantity} src ={Cart}/>
+          <CartButton quantity={quantity} src={Cart} />
         </div>
         {quantity > 0 &&
           <div onClick={handleDecreaseCart}>
-          <ButtonComponent value="-" bg="bg-gray-300" />
+            <ButtonComponent value="-" bg="bg-gray-300" />
           </div>
         }
       </div>
