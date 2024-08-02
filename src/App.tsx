@@ -4,12 +4,12 @@ import HomePage from './pages/HomePage'
 
 import ProductDetails from './pages/ProductDetails'
 import CheckoutPage from './pages/CheckoutPage'
-import { ShoppingCartProvider } from './context/ShoppingCartContext';
+import { ShoppingCartProvider, useShoppingCart } from './context/ShoppingCartContext';
 import NotFoundPage from './pages/NotFoundPage'
 import ProductsPage from './pages/ProductsPage';
 import ProfilesPage from './pages/ProfilesPage';
 import AddProductPage from './pages/AddProductPage';
-import { useEffect } from 'react';
+import {  useEffect } from 'react';
 import { addProducts, initDB } from './utils/db';
 import axios from 'axios';
 
@@ -50,7 +50,11 @@ const App = () => {
 
   //----------------------------------------------------------------------------------------------------------------------------
 
+  //=======================================================
 
+  const{cartItems} = useShoppingCart()
+  console.log("CartItems",cartItems);
+  //=================================================
 
   return (
     <div>
@@ -64,6 +68,7 @@ const App = () => {
           <Route path="/products/checkout" element={<CheckoutPage />} />
           <Route path="/:navStatus" element={<ProductsPage/>}/>
           <Route path="/admin/:action" element={<AddProductPage/>}/>
+          <Route path="/admin/:id/:action" element={<AddProductPage/>}/>
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </ShoppingCartProvider>

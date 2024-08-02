@@ -1,16 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Textarea } from "flowbite-react";
 
-import { addProducts, initDB } from "@/utils/db";
-
+import { addProducts, getAllProducts, initDB } from "@/utils/db";
 import generateNumericUUIDNumber from "@/utils/uuid";
 import DropBox from "@/components/DropBox";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-// Define the product interface
 interface Product {
-    id: string;
+    id: number;
     name: string;
     description: string;
     price: number;
@@ -30,82 +28,107 @@ const AddProductPage = () => {
     const [subcategory, setSubcategory] = useState("");
     const [images, setImages] = useState<File[]>([]);
     const [message, setMessage] = useState<string>("");
+    const [reviews, setReviews] = useState<string[]>([])
 
-    const navigate =useNavigate();
-    // Function to convert file to Base64
+    const navigate = useNavigate();
+    const { id, action } = useParams<{ id: string; action: string }>();
+    console.log(id)
+    let productToEdit: Product
+    useEffect(() => {
+        if (id) {
+            const fetchProductsFromDB = async () => {
+                const db = await initDB();
+                const productsFromDB = await getAllProducts(db);
+                 productToEdit = productsFromDB.find((product: Product) => product.id == Number(id));
+                
+                if (productToEdit) {
+                    console.log("products before edit",productToEdit)
+                    setTitle(productToEdit.name);
+                    setDescription(productToEdit.description);
+                    setCategory(productToEdit.category);
+                    setPrice(productToEdit.price);
+                    setSubcategory(productToEdit.subcategory);
+                    setReviews(productToEdit.reviews)
+                    // setImages(productToEdit.image)
+                }
+            };
+
+            fetchProductsFromDB();
+        }
+    }, [id]);
+
     const fileToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
+            reader.onerror = (error) => reject(error);
         });
     };
+
     const removeImage = (name: string) => {
-        setImages((prevFiles) => prevFiles.filter(file => file.name !== name));
-      };
-      const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setImages((prevFiles) => prevFiles.filter((file) => file.name !== name));
+    };
+
+    const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage("");
         const selectedFiles = e.target.files;
-    
+
         if (selectedFiles) {
-          for (let i = 0; i < selectedFiles.length; i++) {
-            const fileType = selectedFiles[i]?.type;
-            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-    
-            if (validImageTypes.includes(fileType)) {
-              setImages((prevFiles) => [...prevFiles, selectedFiles[i]]);
-            } else {
-              setMessage("Only images accepted");
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const fileType = selectedFiles[i]?.type;
+                const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+
+                if (validImageTypes.includes(fileType)) {
+                    setImages((prevFiles) => [...prevFiles, selectedFiles[i]]);
+                } else {
+                    setMessage("Only images accepted");
+                }
             }
-          }
         }
-      };
+    };
 
-    const handleFormSubmit = async (e: React.FormEvent) => {
-
+    const handleFormSubmit = async () => {
         if (!title || !description || !category || price === undefined || images.length === 0) {
             alert("All fields are required");
             return;
         }
 
-        // Convert files to Base64
-        const imageBase64Array = await Promise.all(images.map(file => fileToBase64(file)));
+        const imageBase64Array = await Promise.all(images.map(fileToBase64));
 
-        const product: Product = {
-            id: String(generateNumericUUIDNumber()), // Using UUID for unique ID
+        const newProduct: Product = {
+            id: Number(id) || generateNumericUUIDNumber(),
             name: title,
             description: description,
             price: price,
-            thumbnail: imageBase64Array[0] || "", // Use the first image as the thumbnail
+            thumbnail: imageBase64Array[0] || "",
             image: imageBase64Array,
             category: category,
             subcategory: subcategory,
             availability: 100,
-            reviews: []
+            reviews: reviews
         };
+        console.log("edited product", newProduct)
         const db = await initDB();
-
-        addProducts(db, [product])
-        navigate("/all products")
+        action==="edit"?await addProducts(db, [newProduct]):await addProducts(db, [newProduct]);
+        navigate("/all products");
     };
-
-
 
     return (
         <>
             <Navbar />
             <div className="flex items-center justify-center h-full">
                 <div className="min-w-[100%]">
-                    <center><p className="text-4xl"> Add a Product</p></center>
-                    <div className="max-w-md mx-auto" >
+                    {action === "addproduct" && <center><p className="text-4xl"> Add a Product</p></center>}
+                    {action === "edit" && <center><p className="text-4xl"> Edit Product</p></center>}
+
+                    <div className="max-w-md mx-auto">
                         <div>
                             <div className="relative z-0 w-full mb-5 group">
                                 <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
                                 <input
                                     type="text"
                                     id="title"
-                                    aria-describedby="helper-text-explanation"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="title"
                                     value={title}
@@ -125,26 +148,25 @@ const AddProductPage = () => {
                                 ></Textarea>
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
-                                <label htmlFor="category" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Category</label>
+                                <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                                 <select
-                                    className='relative z-20 w-full appearance-none rounded-lg border border-stroke dark:border-dark-3 bg-transparent py-[10px] px-5 text-dark-6 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2'
+                                    className="relative z-20 w-full appearance-none rounded-lg border border-stroke dark:border-dark-3 bg-transparent py-[10px] px-5 text-dark-6 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2"
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                     required
                                 >
-                                    <option value='' disabled>Select Category</option>
-                                    <option value='Living Room' className='dark:bg-dark-2'>Living Room</option>
-                                    <option value='Dining' className='dark:bg-dark-2'>Dining</option>
-                                    <option value='Bedroom' className='dark:bg-dark-2'>Bedroom</option>
+                                    <option value="" disabled>Select Category</option>
+                                    <option value="Living Room" className="dark:bg-dark-2">Living Room</option>
+                                    <option value="Dining" className="dark:bg-dark-2">Dining</option>
+                                    <option value="Bedroom" className="dark:bg-dark-2">Bedroom</option>
                                 </select>
-                                <span className='absolute right-4 top-1/2 z-10 mt-[-2px] h-[10px] w-[10px] -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-body-color'></span>
+                                <span className="absolute right-4 top-1/2 z-10 mt-[-2px] h-[10px] w-[10px] -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-body-color"></span>
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
                                 <input
                                     type="number"
                                     id="price"
-                                    aria-describedby="helper-text-explanation"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="price"
                                     value={price}
@@ -157,26 +179,28 @@ const AddProductPage = () => {
                                 <input
                                     type="text"
                                     id="subcategory"
-                                    aria-describedby="helper-text-explanation"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="sub-category"
                                     value={subcategory}
                                     onChange={(e) => setSubcategory(e.target.value)}
                                 />
                             </div>
-                            
 
                             <div>
-                                <DropBox removeImage={removeImage} handleFile={handleFile} message={message} images={images}/>
+                                <DropBox removeImage={removeImage} handleFile={handleFile} message={message} images={images} />
                             </div>
-                            <button  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleFormSubmit}>Add Product</button>
+                            <button
+                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                onClick={handleFormSubmit}
+                            >
+                                {action === "addproduct" ? "Add Product" : "Save Changes"}
+                            </button>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </>
     );
-}
+};
 
 export default AddProductPage;

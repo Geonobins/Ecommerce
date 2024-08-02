@@ -8,6 +8,8 @@ import { CarouselOrientation } from '@/components/CarouselOrientation';
 import { FooterComponent } from '@/components/FooterComponent';
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { getAllProducts, initDB } from '@/utils/db';
+import { EditIcon } from 'lucide-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface Product {
   id: number
@@ -64,7 +66,8 @@ const ProductDetails = () => {
 
   const { increaseItemQuantity, openCart } = useShoppingCart()
   const product = products.find((product) => product.id == id);
- 
+  
+  const { user } = useAuth0();
 
 
   if (!product) {
@@ -89,6 +92,12 @@ const ProductDetails = () => {
 
     navigate(`/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
   };
+  const handleEdit = (action: string) => {
+    
+
+    navigate(`/admin/${product.id}/${action}`);
+  };
+
 
 
 
@@ -131,6 +140,9 @@ const ProductDetails = () => {
                 </div>
                 <div onClick={handleBuyNow}>
                   <ButtonComponent value="Buy Now" bg="bg-black" cl="text-white" />
+                </div>
+                <div onClick={()=>handleEdit("edit")}>
+                {user?.nickname === "admin" && <EditIcon />}
                 </div>
 
               </div>

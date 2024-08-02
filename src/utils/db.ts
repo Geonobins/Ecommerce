@@ -17,9 +17,24 @@ export const getAllProducts = async (db:any) => {
   return await db.getAll(STORE_NAME);
 };
 
-export const addProducts = async (db: any, products: any) => {
+export const addProducts = async (db: any, products: any, key?: any) => {
   const tx = db.transaction(STORE_NAME, 'readwrite');
-  const store = tx.objectStore(STORE_NAME); // Get the object store
-  products.forEach((product: any) => store.put(product)); // Use the store to put the product
-  await tx.done; // Wait for the transaction to complete
+  const store = tx.objectStore(STORE_NAME);
+
+  for (const product of products) {
+    try {
+      
+      if (key) {
+        console.log("key",key)
+        await store.put(product, key);
+      } else {
+        await store.put(product);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      throw error;
+    }
+  }
+
+  await tx.done;
 };

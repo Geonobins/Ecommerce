@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react"; // Import useAuth0
 import ShoppinCart from "../components/ShoppinCart";
-import CartItem from "../components/CartItem";
 
 type ShoppingCartProviderProps = {
   children: ReactNode
@@ -10,7 +10,6 @@ type CartItem = {
   id: number
   quantity: number
 }
-
 
 type ShoppingCartContext = {
   openCart: () => void;
@@ -24,92 +23,103 @@ type ShoppingCartContext = {
   isOpen: boolean
 }
 
-
-const ShoppingCartContext = createContext({} as
-  ShoppingCartContext)
+const ShoppingCartContext = createContext({} as ShoppingCartContext)
 
 export function useShoppingCart() {
   return useContext(ShoppingCartContext)
 }
 
-
-export function ShoppingCartProvider({ children }:
-  ShoppingCartProviderProps) {
-
+export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
+  const { user } = useAuth0(); // Access user data from Auth0
   const [isOpen, setIsOpen] = useState(false)
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+
 
 
   const cartQuantity = cartItems.reduce(
     (quantity, item) => item.quantity + quantity,
     0
-  )
+  );
 
-  const openCart = () => setIsOpen(true)
-  const closeCart = () => setIsOpen(false)
+  const openCart = () => setIsOpen(true);
+  const closeCart = () => setIsOpen(false);
 
+  useEffect(() => {
+    if (user?.email) {
+      const storedCarts = localStorage.getItem('carts');
+      const carts = storedCarts ? JSON.parse(storedCarts) : {};
+      setCartItems(carts[user.email] || []);
+    }
+  }, [user?.email]);
 
+  // Update local storage whenever cartItems change
+  useEffect(() => {
+    if (user?.email) {
+      const storedCarts = localStorage.getItem('carts');
+      const carts = storedCarts ? JSON.parse(storedCarts) : {};
+      carts[user.email] = cartItems; // Update the user's cart
+      localStorage.setItem('carts', JSON.stringify(carts)); // Save all carts
+    }
+  }, [cartItems,user?.email]); 
 
   function getItemQuantity(id: number) {
-
-    return cartItems.find(item => item.id === id)?.quantity || 0
+    return cartItems.find(item => item.id === id)?.quantity || 0;
   }
 
   function increaseItemQuantity(id: number) {
     setCartItems(currItems => {
       if (currItems.find(item => item.id === id) == null) {
-        return [...currItems, { id, quantity: 1 }]
+        return [...currItems, { id, quantity: 1 }];
       } else {
         return currItems.map(item => {
           if (item.id === id) {
-            return { ...item, quantity: item.quantity + 1 }
+            return { ...item, quantity: item.quantity + 1 };
           } else {
-            return item
+            return item;
           }
-        })
+        });
       }
-    })
+    });
   }
-
 
   function decreaseItemQuantity(id: number) {
     setCartItems(currItems => {
       if (currItems.find(item => item.id === id)?.quantity === 1) {
-        return currItems.filter(item => item.id !== id)
-      }
-      else {
+        return currItems.filter(item => item.id !== id);
+      } else {
         return currItems.map(item => {
           if (item.id === id) {
-            return { ...item, quantity: item.quantity - 1 }
+            return { ...item, quantity: item.quantity - 1 };
           } else {
-            return item
+            return item;
           }
-        })
+        });
       }
-    })
+    });
   }
 
   function removeFromCart(id: number) {
     setCartItems(currItems => {
-      return currItems.filter(item => item.id !== id)
-    })
+      return currItems.filter(item => item.id !== id);
+    });
   }
 
-
-  return <ShoppingCartContext.Provider
-    value={{
-      getItemQuantity,
-      increaseItemQuantity,
-      decreaseItemQuantity,
-      removeFromCart,
-      openCart,
-      closeCart,
-      cartItems,
-      cartQuantity,
-      isOpen
-    }}>
-    {children}
-    <ShoppinCart isOpen={isOpen} />
-
-  </ShoppingCartContext.Provider>
+  return (
+    <ShoppingCartContext.Provider
+      value={{
+        getItemQuantity,
+        increaseItemQuantity,
+        decreaseItemQuantity,
+        removeFromCart,
+        openCart,
+        closeCart,
+        cartItems,
+        cartQuantity,
+        isOpen
+      }}>
+      {children}
+      <ShoppinCart isOpen={isOpen} />
+    </ShoppingCartContext.Provider>
+  );
 }
