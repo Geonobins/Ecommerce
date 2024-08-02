@@ -19,7 +19,7 @@ const Navbar = ({ setSearchQuery }: any) => {
 
   const { isAuthenticated } = useAuth0();
   const handleCart = () => {
-    openCart();
+    
     if (isAuthenticated) {
       openCart();;
     } else {
