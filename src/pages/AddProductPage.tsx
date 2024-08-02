@@ -27,6 +27,7 @@ const AddProductPage = () => {
     const [price, setPrice] = useState<number | undefined>(undefined);
     const [subcategory, setSubcategory] = useState("");
     const [images, setImages] = useState<File[]>([]);
+    const [editImages, setEditImages] = useState<string[]>([])
     const [message, setMessage] = useState<string>("");
     const [reviews, setReviews] = useState<string[]>([])
 
@@ -49,7 +50,7 @@ const AddProductPage = () => {
                     setPrice(productToEdit.price);
                     setSubcategory(productToEdit.subcategory);
                     setReviews(productToEdit.reviews)
-                    // setImages(productToEdit.image)
+                    setEditImages(productToEdit.image)
                 }
             };
 
