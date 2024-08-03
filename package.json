@@ -18,6 +18,7 @@
     "@material-tailwind/react": "^2.1.9",
     "@mui/material": "^5.16.5",
     "@radix-ui/react-slot": "^1.1.0",
+    "@types/auth0": "^3.3.10",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",

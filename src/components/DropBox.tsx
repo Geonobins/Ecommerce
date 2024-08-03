@@ -1,15 +1,15 @@
 import { Trash2Icon } from "lucide-react";
 import React from "react";
 
-
 interface DropBoxProps {
     handleFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    removeImage: (name: string) => void;
+    removeImage: (name: string, type: "file" | "url") => void;
     message: string;
     images: File[];
+    existingImages: string[];
 }
 
-const DropBox: React.FC<DropBoxProps> = ({ handleFile, removeImage, message, images }) => {
+const DropBox: React.FC<DropBoxProps> = ({ handleFile, removeImage, message, images, existingImages }) => {
     return (
         <div className="flex justify-center h-96 items-center px-3">
             <div className="rounded-lg shadow-xl bg-gray-50 md:w-1/2 w-[360px]">
@@ -32,9 +32,17 @@ const DropBox: React.FC<DropBoxProps> = ({ handleFile, removeImage, message, ima
                         </label>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-2">
+                        {existingImages.map((url, key) => (
+                            <div key={key} className="overflow-hidden relative">
+                                <button onClick={() => removeImage(url, "url")} className="mdi mdi-close absolute right-1 hover:text-white cursor-pointer">
+                                    <Trash2Icon />
+                                </button>
+                                <img className="h-20 w-20 rounded-md" src={url} alt={`existing-${key}`} />
+                            </div>
+                        ))}
                         {images.map((file, key) => (
                             <div key={key} className="overflow-hidden relative">
-                                <button onClick={() => removeImage(file.name)} className="mdi mdi-close absolute right-1 hover:text-white cursor-pointer">
+                                <button onClick={() => removeImage(file.name, "file")} className="mdi mdi-close absolute right-1 hover:text-white cursor-pointer">
                                     <Trash2Icon />
                                 </button>
                                 <img className="h-20 w-20 rounded-md" src={URL.createObjectURL(file)} alt={file.name} />

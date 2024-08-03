@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Textarea } from "flowbite-react";
-
 import { addProducts, getAllProducts, initDB } from "@/utils/db";
 import generateNumericUUIDNumber from "@/utils/uuid";
 import DropBox from "@/components/DropBox";
@@ -27,36 +26,34 @@ const AddProductPage = () => {
     const [price, setPrice] = useState<number | undefined>(undefined);
     const [subcategory, setSubcategory] = useState("");
     const [images, setImages] = useState<File[]>([]);
-    const [editImages, setEditImages] = useState<string[]>([])
+    const [existingImages, setExistingImages] = useState<string[]>([]);
     const [message, setMessage] = useState<string>("");
-    const [reviews, setReviews] = useState<string[]>([])
+    const [reviews, setReviews] = useState<string[]>([]);
 
     const navigate = useNavigate();
     const { id, action } = useParams<{ id: string; action: string }>();
-    console.log(id)
-    let productToEdit: Product
+
     useEffect(() => {
         if (id) {
-            const fetchProductsFromDB = async () => {
-                const db = await initDB();
-                const productsFromDB = await getAllProducts(db);
-                 productToEdit = productsFromDB.find((product: Product) => product.id == Number(id));
-                
-                if (productToEdit) {
-                    console.log("products before edit",productToEdit)
-                    setTitle(productToEdit.name);
-                    setDescription(productToEdit.description);
-                    setCategory(productToEdit.category);
-                    setPrice(productToEdit.price);
-                    setSubcategory(productToEdit.subcategory);
-                    setReviews(productToEdit.reviews)
-                    setEditImages(productToEdit.image)
-                }
-            };
-
-            fetchProductsFromDB();
+            fetchProductToEdit();
         }
     }, [id]);
+
+    const fetchProductToEdit = async () => {
+        const db = await initDB();
+        const productsFromDB = await getAllProducts(db);
+        const productToEdit = productsFromDB.find((product: Product) => product.id === Number(id));
+
+        if (productToEdit) {
+            setTitle(productToEdit.name);
+            setDescription(productToEdit.description);
+            setCategory(productToEdit.category);
+            setPrice(productToEdit.price);
+            setSubcategory(productToEdit.subcategory);
+            setReviews(productToEdit.reviews);
+            setExistingImages(productToEdit.image);
+        }
+    };
 
     const fileToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
@@ -67,8 +64,12 @@ const AddProductPage = () => {
         });
     };
 
-    const removeImage = (name: string) => {
-        setImages((prevFiles) => prevFiles.filter((file) => file.name !== name));
+    const removeImage = (name: string, type: "file" | "url") => {
+        if (type === "file") {
+            setImages((prevFiles) => prevFiles.filter((file) => file.name !== name));
+        } else {
+            setExistingImages((prevUrls) => prevUrls.filter((url) => url !== name));
+        }
     };
 
     const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,28 +91,29 @@ const AddProductPage = () => {
     };
 
     const handleFormSubmit = async () => {
-        if (!title || !description || !category || price === undefined || images.length === 0) {
+        if (!title || !description || !category || price === undefined || (images.length === 0 && existingImages.length === 0)) {
             alert("All fields are required");
             return;
         }
 
         const imageBase64Array = await Promise.all(images.map(fileToBase64));
+        const mergedImages = [...existingImages, ...imageBase64Array];
 
         const newProduct: Product = {
             id: Number(id) || generateNumericUUIDNumber(),
             name: title,
             description: description,
             price: price,
-            thumbnail: imageBase64Array[0] || "",
-            image: imageBase64Array,
+            thumbnail: mergedImages[0] || "",
+            image: mergedImages,
             category: category,
             subcategory: subcategory,
             availability: 100,
             reviews: reviews
         };
-        console.log("edited product", newProduct)
+
         const db = await initDB();
-        action==="edit"?await addProducts(db, [newProduct]):await addProducts(db, [newProduct]);
+        await addProducts(db, [newProduct]);
         navigate("/all products");
     };
 
@@ -120,9 +122,8 @@ const AddProductPage = () => {
             <Navbar />
             <div className="flex items-center justify-center h-full">
                 <div className="min-w-[100%]">
-                    {action === "addproduct" && <center><p className="text-4xl"> Add a Product</p></center>}
-                    {action === "edit" && <center><p className="text-4xl"> Edit Product</p></center>}
-
+                    {action === "addproduct" && <center><p className="text-4xl">Add a Product</p></center>}
+                    {action === "edit" && <center><p className="text-4xl">Edit Product</p></center>}
                     <div className="max-w-md mx-auto">
                         <div>
                             <div className="relative z-0 w-full mb-5 group">
@@ -186,9 +187,14 @@ const AddProductPage = () => {
                                     onChange={(e) => setSubcategory(e.target.value)}
                                 />
                             </div>
-
                             <div>
-                                <DropBox removeImage={removeImage} handleFile={handleFile} message={message} images={images} />
+                                <DropBox
+                                    removeImage={removeImage}
+                                    handleFile={handleFile}
+                                    message={message}
+                                    images={images}
+                                    existingImages={existingImages}
+                                />
                             </div>
                             <button
                                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
