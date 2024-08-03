@@ -7,8 +7,8 @@ import { useShoppingCart } from '../context/ShoppingCartContext';
 import { CarouselOrientation } from '@/components/CarouselOrientation';
 import { FooterComponent } from '@/components/FooterComponent';
 import { ProductCarousel } from '@/components/ProductCarousel';
-import { getAllProducts, initDB } from '@/utils/db';
-import { EditIcon } from 'lucide-react';
+import { deleteProduct, getAllProducts, initDB } from '@/utils/db';
+import {  PencilIcon, Trash2Icon } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 interface Product {
@@ -29,6 +29,8 @@ const ProductDetails = () => {
   const [cartStatus, setCartStatus] = useState("Add to Cart")
 
   const [products, setProducts] = useState<Product[]>([])
+
+  
 
   // useEffect(() => {
   //   console.log('Fetching products...');
@@ -98,6 +100,12 @@ const ProductDetails = () => {
     navigate(`/admin/${product.id}/${action}`);
   };
 
+  const handleDelete = async ()=>{
+    const db = await initDB();
+    deleteProduct(db,product.id)
+    navigate('/all products');
+  }
+
 
 
 
@@ -141,11 +149,20 @@ const ProductDetails = () => {
                 <div onClick={handleBuyNow}>
                   <ButtonComponent value="Buy Now" bg="bg-black" cl="text-white" />
                 </div>
-                <div onClick={()=>handleEdit("edit")}>
-                {user?.nickname === "admin" && <EditIcon />}
-                </div>
 
               </div>
+                {user?.nickname === "admin" &&
+
+              <div className=' flex items-end justify-end gap-2'>
+                <div  onClick={()=>handleEdit("edit")} className='hover:bg-slate-100 rounded-md p-2  hover:-translate-y-1 duration-300 shadow-sm hover:shadow-lg'>
+                <PencilIcon />
+                </div>
+                <div onClick={handleDelete} className='hover:bg-slate-100 rounded-md p-2 hover:-translate-y-1 duration-300 shadow-sm hover:shadow-lg'>
+                  <Trash2Icon/>
+                </div>
+                </div>
+                }
+
             </div>
           </div>
         </div>

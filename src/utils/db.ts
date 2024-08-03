@@ -38,3 +38,17 @@ export const addProducts = async (db: any, products: any, key?: any) => {
 
   await tx.done;
 };
+
+export const deleteProduct = async (db: any, id: any) => {
+  const tx = db.transaction(STORE_NAME, 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+  
+  try {
+    await store.delete(id);
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    throw error;
+  }
+
+  await tx.done;
+};
