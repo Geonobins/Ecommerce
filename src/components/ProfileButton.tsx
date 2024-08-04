@@ -3,7 +3,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 
 import { ChevronDownIcon, LogOutIcon } from 'lucide-react';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 
 
@@ -12,7 +12,7 @@ const ProfileButton = () => {
   // const [user, setUser] = useState<any>(null); // Initialize user as null
 
   const { loginWithRedirect, logout, user,  isLoading } = useAuth0();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLogin = () => {
 
@@ -56,7 +56,7 @@ const ProfileButton = () => {
         <PopoverPanel anchor="bottom" transition className="flex origin-top flex-col text-gray-500 bg-slate-50 m-2 px-2 gap-2 py-2 min-w-60 rounded-md transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 z-50">
 
           {user ?
-            <div onClick={() => { navigate("/home/profile") }}>
+            <div >
               <div className='cursor-pointer flex flex-col hover:text-black'>
                 <p className='text-md'>{`Hello ${user.nickname}`}</p>
                 <p className='text-sm'>{user.email}</p>

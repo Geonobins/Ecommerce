@@ -9,10 +9,10 @@ export function FooterComponent() {
   const navigate = useNavigate();
 
   const handleClick = (str: string) => {
-    navigate(`home/${str}`);
+    navigate(`/home/${str}`);
   }
   return (
-    <Footer bgDark className="rounded-none bg-slate-100">
+    <Footer bgDark className="rounded-none bg-slate-100 ">
       <div className="w-full py-1 ">
         <div className="grid w-full grid-cols-2 gap-8 px-6 py-8 md:grid-cols-4">
           <div>
