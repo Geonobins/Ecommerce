@@ -81,7 +81,7 @@ export const ProductsPage = () => {
     <div className='flex flex-col min-h-screen '>
       <div className='flex-1'>
         <Navbar setSearchQuery={setSearchQuery} />
-
+    <div className='flex flex-col my-32'>
         <div className="sort-dropdown px-11">
           <select value={sortOrder} onChange={handleSortChange}>
             <option value="">Sort by Price</option>
@@ -103,6 +103,7 @@ export const ProductsPage = () => {
             />
           ))}
         </div>
+      </div>
       </div>
       <FooterComponent />
     </div>

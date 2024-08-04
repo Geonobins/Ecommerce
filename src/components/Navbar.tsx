@@ -28,7 +28,7 @@ const Navbar = ({ setSearchQuery }: any) => {
   };
 
   const handleNavigation = (str: string) => {
-    navigate(`/${str}`);
+    navigate(`/home/${str}`);
   };
 
   const handleSearchChange = (e: { target: { value: SetStateAction<string>; }; }) => {
@@ -39,7 +39,7 @@ const Navbar = ({ setSearchQuery }: any) => {
 
 
   return (
-    <nav className="flex items-center justify-between flex-wrap p-6">
+    <nav className="flex items-center justify-between flex-wrap p-6 fixed top-0 bg-white min-w-[100%] z-40 shadow-sm"  >
       <div className="flex items-center flex-shrink-0 text-gray-600 mr-6 lg:mr-72">
         <Logo />
       </div>

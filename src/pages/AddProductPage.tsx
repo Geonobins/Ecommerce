@@ -5,6 +5,7 @@ import { addProducts, getAllProducts, initDB } from "@/utils/db";
 import generateNumericUUIDNumber from "@/utils/uuid";
 import DropBox from "@/components/DropBox";
 import { useNavigate, useParams } from "react-router-dom";
+import { FooterComponent } from "@/components/FooterComponent";
 
 interface Product {
     id: number;
@@ -114,14 +115,15 @@ const AddProductPage = () => {
 
         const db = await initDB();
         await addProducts(db, [newProduct]);
-        navigate("/all products");
+        navigate("home/all products");
     };
 
     return (
-        <>
+        <div>
+            <div className="flex-1 flex-col ">
             <Navbar />
-            <div className="flex items-center justify-center h-full">
-                <div className="min-w-[100%]">
+            <div className="flex items-center justify-center h-full my-28 md:mx-2">
+                <div className="min-w-[90%]">
                     {action === "addproduct" && <center><p className="text-4xl">Add a Product</p></center>}
                     {action === "edit" && <center><p className="text-4xl">Edit Product</p></center>}
                     <div className="max-w-md mx-auto">
@@ -197,7 +199,7 @@ const AddProductPage = () => {
                                 />
                             </div>
                             <button
-                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 my-7"
                                 onClick={handleFormSubmit}
                             >
                                 {action === "addproduct" ? "Add Product" : "Save Changes"}
@@ -206,7 +208,9 @@ const AddProductPage = () => {
                     </div>
                 </div>
             </div>
-        </>
+            </div>
+            <FooterComponent/>
+        </div>
     );
 };
 

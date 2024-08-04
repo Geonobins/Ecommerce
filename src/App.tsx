@@ -12,11 +12,19 @@ import AddProductPage from './pages/AddProductPage';
 import {  useEffect } from 'react';
 import { addProducts, initDB } from './utils/db';
 import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 
 
 const App = () => {
+
+  
+
+  const {user} = useAuth0();
+  const isAdmin =user?.nickname == "admin"? true:false
+  console.log("adminm?",isAdmin)
+  
 
   // ----------------------------------------------------------------------------------------
 
@@ -50,6 +58,8 @@ const App = () => {
 
   //----------------------------------------------------------------------------------------------------------------------------
 
+
+  
   //=======================================================
 
   const{cartItems} = useShoppingCart()
@@ -61,14 +71,14 @@ const App = () => {
       <ShoppingCartProvider>
         <Routes>
           {/* <Route path="/" element={<Navigate to="/home" />} /> */}
-          <Route path="/" index element={<HomePage />} />
-          <Route path="/profile" index element={<ProfilesPage />} />
-          <Route path="/products/:productId" element={<ProductDetails />} />
-          <Route path="/products/:id/checkout" element={<CheckoutPage />} />
-          <Route path="/products/checkout" element={<CheckoutPage />} />
-          <Route path="/:navStatus" element={<ProductsPage/>}/>
-          <Route path="/admin/:action" element={<AddProductPage/>}/>
-          <Route path="/admin/:id/:action" element={<AddProductPage/>}/>
+          <Route path="/home" index element={<HomePage />} />
+          <Route path="/home/profile" index element={<ProfilesPage />} />
+          <Route path="/home/products/:productId" element={<ProductDetails />} />
+          <Route path="/home/products/:id/checkout" element={<CheckoutPage />} />
+          <Route path="/home/products/checkout" element={<CheckoutPage />} />
+          <Route path="/home/:navStatus" element={<ProductsPage/>}/>
+          <Route path="/home/admin/:action" element={isAdmin?<AddProductPage/>:<NotFoundPage/>}/>
+          <Route path="/home/admin/:id/:action" element={isAdmin?<AddProductPage/>:<NotFoundPage/>}/>
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </ShoppingCartProvider>

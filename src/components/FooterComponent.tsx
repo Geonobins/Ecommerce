@@ -9,7 +9,7 @@ export function FooterComponent() {
   const navigate = useNavigate();
 
   const handleClick = (str: string) => {
-    navigate(`/${str}`);
+    navigate(`home/${str}`);
   }
   return (
     <Footer bgDark className="rounded-none bg-slate-100">

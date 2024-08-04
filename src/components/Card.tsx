@@ -15,13 +15,13 @@ const Card = (props: any) => {
   const { isAuthenticated } = useAuth0(); // Check if user is authenticated
 
   const handleClick = () => {
-    navigate(`/products/${props.id}`);
+    navigate(`/home/products/${props.id}`);
   };
 
   const handleBuyNow = (event: { stopPropagation: () => void; }) => {
     event.stopPropagation(); // Prevents the event from bubbling up to the parent div
     if (isAuthenticated) {
-      navigate(`/products/${props.id}/checkout`, { state: { totalPrice: props.price } });
+      navigate(`/home/products/${props.id}/checkout`, { state: { totalPrice: props.price } });
     } else {
       alert('Please log in to proceed with the purchase.');
     }

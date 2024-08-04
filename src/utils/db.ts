@@ -51,4 +51,5 @@ export const deleteProduct = async (db: any, id: any) => {
   }
 
   await tx.done;
+  
 };

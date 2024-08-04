@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react"; // Import useAuth0
 import ShoppinCart from "../components/ShoppinCart";
+import { getAllProducts, initDB } from "@/utils/db";
 
 type ShoppingCartProviderProps = {
   children: ReactNode
@@ -45,11 +46,21 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
+  const validateCartItems = async (items: CartItem[]) => {
+    const db = await initDB();
+    const products = await getAllProducts(db);
+    const validItems = items.filter(item => products.some((product: { id: number; }) => product.id === item.id));
+    console.log("validItems",validItems)
+    return validItems;
+    
+  };
+
   useEffect(() => {
     if (user?.email) {
       const storedCarts = localStorage.getItem('carts');
       const carts = storedCarts ? JSON.parse(storedCarts) : {};
-      setCartItems(carts[user.email] || []);
+      const userCart = carts[user.email] || [];
+      validateCartItems(userCart).then(validItems => setCartItems(validItems));
     }
   }, [user?.email]);
 

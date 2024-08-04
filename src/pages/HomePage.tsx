@@ -13,10 +13,10 @@ function HomePage() {
 
 
   return (
-    <>
+    <div className="flex flex-col">
       <Navbar />
       <center>
-        <div className="h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%]">
+        <div className=" h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%] my-24">
           <Carousel slideInterval={2000} slide={true}>
             <img src={Banner1} alt="..." className="w-full h-full object-fill" />
             <img src={Banner2} alt="..." className="w-full h-full object-fill" />
@@ -33,7 +33,7 @@ function HomePage() {
       </div>
       <div />
       <FooterComponent />
-    </>
+    </div>
   )
 }
 

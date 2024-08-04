@@ -8,8 +8,9 @@ import { CarouselOrientation } from '@/components/CarouselOrientation';
 import { FooterComponent } from '@/components/FooterComponent';
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { deleteProduct, getAllProducts, initDB } from '@/utils/db';
-import {  PencilIcon, Trash2Icon } from 'lucide-react';
+import { PencilIcon, Trash2Icon } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
+import ConfirmModal from '@/components/ConfirmModal';
 
 interface Product {
   id: number
@@ -30,7 +31,9 @@ const ProductDetails = () => {
 
   const [products, setProducts] = useState<Product[]>([])
 
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
 
   // useEffect(() => {
   //   console.log('Fetching products...');
@@ -66,9 +69,9 @@ const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
   const id = Number(productId);
 
-  const { increaseItemQuantity, openCart } = useShoppingCart()
+  const { increaseItemQuantity, openCart, removeFromCart } = useShoppingCart()
   const product = products.find((product) => product.id == id);
-  
+
   const { user } = useAuth0();
 
 
@@ -92,18 +95,19 @@ const ProductDetails = () => {
   const handleBuyNow = () => {
     increaseItemQuantity(product.id)
 
-    navigate(`/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
+    navigate(`home/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
   };
   const handleEdit = (action: string) => {
-    
 
-    navigate(`/admin/${product.id}/${action}`);
+
+    navigate(`/home/admin/${product.id}/${action}`);
   };
 
-  const handleDelete = async ()=>{
+  const handleDelete = async () => {
     const db = await initDB();
-    deleteProduct(db,product.id)
-    navigate('/all products');
+    deleteProduct(db, product.id)
+    removeFromCart(product.id)
+    navigate('/home/all products');
   }
 
 
@@ -113,6 +117,7 @@ const ProductDetails = () => {
     <div className='flex flex-col min-h-screen '>
       <div className='flex-1'>
         <Navbar />
+        <div className='flex flex-col my-20'>
         <div className="max-w-7xl w-full mx-auto my-24 shadow-md px-4">
           <div className="flex flex-wrap justify-around py-2.5" key={product.id}>
             <div className="max-w-lg min-w-[290px] overflow-hidden m-6.25">
@@ -151,17 +156,18 @@ const ProductDetails = () => {
                 </div>
 
               </div>
-                {user?.nickname === "admin" &&
+              {user?.nickname === "admin" &&
 
-              <div className=' flex items-end justify-end gap-2'>
-                <div  onClick={()=>handleEdit("edit")} className='hover:bg-slate-100 rounded-md p-2  hover:-translate-y-1 duration-300 shadow-sm hover:shadow-lg'>
-                <PencilIcon />
+                <div className=' flex items-end justify-end gap-2'>
+                  <div onClick={() => handleEdit("edit")} className='hover:bg-slate-100 rounded-md p-2  hover:-translate-y-1 duration-300 shadow-sm hover:shadow-lg'>
+                    <PencilIcon />
+                  </div>
+                  <div onClick={()=>setIsModalOpen(true)} className='hover:bg-slate-100 rounded-md p-2 hover:-translate-y-1 duration-300 shadow-sm hover:shadow-lg'>
+                    <Trash2Icon />
+                  </div>
                 </div>
-                <div onClick={handleDelete} className='hover:bg-slate-100 rounded-md p-2 hover:-translate-y-1 duration-300 shadow-sm hover:shadow-lg'>
-                  <Trash2Icon/>
-                </div>
-                </div>
-                }
+              }
+
 
             </div>
           </div>
@@ -177,7 +183,16 @@ const ProductDetails = () => {
           <ProductCarousel category={product.subcategory} />
         </div>
       </div>
+      </div>
       <FooterComponent />
+      
+          <ConfirmModal
+            isOpen={isModalOpen}
+            onRequestClose={() => setIsModalOpen(false)}
+            onConfirm={handleDelete}
+            message="Are you sure you want to delete this product?"
+          />
+        
     </div>
 
   );

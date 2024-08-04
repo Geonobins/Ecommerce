@@ -46,16 +46,17 @@ const ProfileButton = () => {
   return (
 
     (
+      <div className='flex z-50'>
       <Popover className="relative bg-white ">
         <PopoverButton className="flex">
           <UserCircleIcon className='size-10 text-gray-300 hover:text-gray-500' />
           <ChevronDownIcon className="size-5 text-gray-300 group-data-[open]:rotate-180" />
         </PopoverButton>
 
-        <PopoverPanel anchor="bottom" transition className="flex origin-top flex-col text-gray-500 bg-slate-50 m-2 px-2 gap-2 py-2 min-w-60 rounded-md transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0">
+        <PopoverPanel anchor="bottom" transition className="flex origin-top flex-col text-gray-500 bg-slate-50 m-2 px-2 gap-2 py-2 min-w-60 rounded-md transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 z-50">
 
           {user ?
-            <div onClick={() => { navigate("/profile") }}>
+            <div onClick={() => { navigate("/home/profile") }}>
               <div className='cursor-pointer flex flex-col hover:text-black'>
                 <p className='text-md'>{`Hello ${user.nickname}`}</p>
                 <p className='text-sm'>{user.email}</p>
@@ -81,6 +82,7 @@ const ProfileButton = () => {
 
         </PopoverPanel>
       </Popover>
+      </div>
     )
   )
 }

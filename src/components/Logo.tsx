@@ -4,7 +4,7 @@ import LogoImage from "../icons/logo.png"
 const Logo = () => {
     return (
         <>
-            <Link to="/">
+            <Link to="/home">
                 <div className='flex flex-row'>
 
                     <img src={LogoImage} className="w-100 h-10 mr-2" alt="Logo" />
