@@ -115,7 +115,7 @@ const AddProductPage = () => {
 
         const db = await initDB();
         await addProducts(db, [newProduct]);
-        navigate("home/all products");
+        navigate("/home/all products");
     };
 
     return (

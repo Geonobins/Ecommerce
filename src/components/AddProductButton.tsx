@@ -7,7 +7,7 @@ const AddProductButton = () => {
 
   const handleClick = (str: string) => {
 
-    navigate(`/admin/${str}`)
+    navigate(`/home/admin/${str}`)
   }
   return (
     <div
