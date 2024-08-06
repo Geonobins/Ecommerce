@@ -1,13 +1,12 @@
-
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useShoppingCart } from '../context/ShoppingCartContext'
+import { useDispatch, useSelector } from 'react-redux'
 import CartItem from './CartItem'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-// import axios from 'axios'
 import { getAllProducts, initDB } from '@/utils/db'
-
+import { RootState } from '@/app/store'
+import { closeCart } from '@/features/cart/cartSlice'
 
 interface Product {
   id: number;
@@ -22,25 +21,17 @@ interface Product {
   subcategory: string;
 }
 
-type ShoppinCartProps = {
+type ShoppingCartProps = {
   isOpen: boolean
 }
-export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
+
+export default function ShoppingCart({ isOpen }: ShoppingCartProps) {
   const [products, setProducts] = useState<Product[]>([]);
-  const { getItemQuantity, closeCart, cartItems } = useShoppingCart();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axios.get('https://jsondummy.vercel.app/api/products?type=furniture')
-  //     .then((response) => {
-  //       setProducts(response.data.products);
-  //     })
-  //     .catch((error) => {
-  //       console.error('There was an error!', error);
-  //     });
-  // }, []);
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
 
-  //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
     const fetchProductsFromDB = async () => {
       const db = await initDB();
@@ -51,23 +42,18 @@ export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
     fetchProductsFromDB();
   }, []);
 
-
-
-  //--------------------------------------------------------------------------------------------------------------
-
   const price = cartItems.reduce((total, cartItem) => {
-    const item = products.find(i => i.id === cartItem.id)
-    return total + (item?.price || 0) * cartItem.quantity
-  }, 0)
-
+    const item = products.find(i => i.id === cartItem.id);
+    return total + (item?.price || 0) * cartItem.quantity;
+  }, 0);
 
   const handleCheckout = () => {
-    navigate("/home/products/checkout", { state: { totalPrice: price } })
-    closeCart()
-  }
+    navigate("/home/products/checkout", { state: { totalPrice: price } });
+    dispatch(closeCart());
+  };
 
   return (
-    <Dialog open={isOpen} onClose={closeCart} className="relative z-50">
+    <Dialog open={isOpen} onClose={() => dispatch(closeCart())} className="relative z-50">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-500 ease-in-out data-[closed]:opacity-0"
@@ -87,7 +73,7 @@ export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
                     <div className="ml-3 flex h-7 items-center">
                       <button
                         type="button"
-                        onClick={closeCart}
+                        onClick={() => dispatch(closeCart())}
                         className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                       >
                         <span className="absolute -inset-0.5" />
@@ -102,7 +88,7 @@ export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
                       <ul role="list" className="-my-6 divide-y divide-gray-200">
                         {cartItems.map((product) => (
                           <li key={product.id} className="flex py-6">
-                            <CartItem id={product.id} quantity={getItemQuantity(product.id)} />
+                            <CartItem id={product.id} quantity={product.quantity} />
                           </li>
                         ))}
                       </ul>
@@ -128,7 +114,7 @@ export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
                       or{' '}
                       <button
                         type="button"
-                        onClick={closeCart}
+                        onClick={() => dispatch(closeCart())}
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                       >
                         Continue Shopping
@@ -143,5 +129,5 @@ export default function ShoppingCart({ isOpen }: ShoppinCartProps) {
         </div>
       </div>
     </Dialog>
-  )
+  );
 }
