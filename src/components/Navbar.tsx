@@ -2,18 +2,23 @@ import { SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Bag from "../icons/shopping-bag.png";
 import Logo from './Logo';
-import CartButton from './CartButton';
-import { useShoppingCart } from '../context/ShoppingCartContext';
-import ButtonComponent from './ButtonComponent';
+import CartButton from './CartButton';import ButtonComponent from './ButtonComponent';
 
 import Profile from './ProfileButton';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const Navbar = ({ setSearchQuery }: any) => {
-  const { openCart, cartQuantity } = useShoppingCart();
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
+import { getCartQuantity, openCart } from '@/features/cart/cartSlice';
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/app/store';
 
+
+
+const Navbar = ({ setSearchQuery }: any) => {
+  
+  const [search, setSearch] = useState('');
+  const [isOpen,setIsOpen] = useState(false)
+  const cartQuantity = useSelector((state: RootState) => getCartQuantity(state));
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -21,7 +26,8 @@ const Navbar = ({ setSearchQuery }: any) => {
   const handleCart = () => {
     
     if (isAuthenticated) {
-      openCart();;
+      console.log("hai cart")
+      dispatch(openCart());
     } else {
       alert("Login to manage cart")
     }

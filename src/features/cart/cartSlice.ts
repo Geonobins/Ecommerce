@@ -10,11 +10,13 @@ type CartItem = {
 type CartState = {
   isOpen: boolean;
   cartItems: CartItem[];
+  cartQuantity:number;
 };
 
 const initialState: CartState = {
   isOpen: false,
   cartItems: [],
+  cartQuantity:0,
 };
 
 // Async thunk to validate cart items
@@ -33,26 +35,35 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     openCart(state) {
+      console.log("helloagin")
       state.isOpen = true;
     },
     closeCart(state) {
+      console.log("closing cart")
       state.isOpen = false;
     },
     increaseItemQuantity(state, action: PayloadAction<number>) {
+      state.cartQuantity+=1;
       const item = state.cartItems.find(item => item.id === action.payload);
       if (item) {
+        
         item.quantity += 1;
+        
+        
       } else {
         state.cartItems.push({ id: action.payload, quantity: 1 });
       }
     },
     decreaseItemQuantity(state, action: PayloadAction<number>) {
+      state.cartQuantity-=1;
       const item = state.cartItems.find(item => item.id === action.payload);
       if (item) {
+        
         if (item.quantity === 1) {
           state.cartItems = state.cartItems.filter(item => item.id !== action.payload);
         } else {
           item.quantity -= 1;
+          
         }
       }
     },
@@ -83,5 +94,10 @@ export const {
 export const selectCart = (state: RootState) => state.cart;
 export const getItemQuantity = (state: RootState, id: number) =>
   state.cart.cartItems.find(item => item.id === id)?.quantity || 0;
+
+export const getCartQuantity = (state: RootState) => 
+  state.cart.cartItems.reduce((total, item) => total + item.quantity, 0);
+// export const getCartQuantity = (state: RootState, id: number) =>
+//   state.cart.cartItems.find(item => item.id === id)?.quantity || 0;
 
 export default cartSlice.reducer;

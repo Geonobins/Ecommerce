@@ -1,19 +1,20 @@
-
-import { Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-
-import ProductDetails from './pages/ProductDetails'
-import CheckoutPage from './pages/CheckoutPage'
-import { ShoppingCartProvider, useShoppingCart } from './context/ShoppingCartContext';
-import NotFoundPage from './pages/NotFoundPage'
+import { Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import ProductDetails from './pages/ProductDetails';
+import CheckoutPage from './pages/CheckoutPage';
+import NotFoundPage from './pages/NotFoundPage';
 import ProductsPage from './pages/ProductsPage';
 import ProfilesPage from './pages/ProfilesPage';
 import AddProductPage from './pages/AddProductPage';
-import {  useEffect } from 'react';
+import { useEffect } from 'react';
 import { addProducts, initDB } from './utils/db';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setCartItems, validateCartItems } from '@/features/cart/cartSlice';
+import getCartItemsFromLocalStorage from '@/utils/api/getCart';
+import { RootState } from './app/store';
+import saveCartItemsToLocalStorage from './utils/api/saveCart';
 
 
 
@@ -21,13 +22,35 @@ const App = () => {
 
   
 
-  const {user} = useAuth0();
+  
+  const { user, isAuthenticated } = useAuth0();
+  const dispatch = useDispatch();
   const isAdmin =user?.nickname == "admin"? true:false
   console.log("adminm?",isAdmin)
+
+
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   
 
+//--------------------------------------------------------------------
+
+  useEffect(() => {
+    if (user?.email) {
+      const storedCarts  = getCartItemsFromLocalStorage(user.email);
+      dispatch(validateCartItems(storedCarts)).unwrap().then((validItems: { id: number; quantity: number; }[]) => dispatch(setCartItems(validItems)));
+    }
+  }, [isAuthenticated, user?.email, dispatch]);
   // ----------------------------------------------------------------------------------------
 
+  useEffect(() => {
+    if (user?.email) {
+      saveCartItemsToLocalStorage(user.email, cartItems);
+    }
+  }, [cartItems, user?.email]);
+
+
+
+  //-------------------------------------------------------------------------------------------------------
   useEffect(() => {
     const fetchAndStoreProducts = async () => {
       const db = await initDB();
@@ -62,13 +85,11 @@ const App = () => {
   
   //=======================================================
 
-  const{cartItems} = useShoppingCart()
   console.log("CartItems",cartItems);
   //=================================================
 
   return (
     <div>
-      <ShoppingCartProvider>
         <Routes>
           {/* <Route path="/" element={<Navigate to="/home" />} /> */}
           <Route path="/home" index element={<HomePage />} />
@@ -81,7 +102,6 @@ const App = () => {
           <Route path="/home/admin/:id/:action" element={isAdmin?<AddProductPage/>:<NotFoundPage/>}/>
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
-      </ShoppingCartProvider>
     </div>
   )
 }

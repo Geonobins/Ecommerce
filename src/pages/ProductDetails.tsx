@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useParams, useNavigate } from 'react-router-dom';
 import ButtonComponent from '../components/ButtonComponent';
-import { useShoppingCart } from '../context/ShoppingCartContext';
 // import axios from 'axios';
 import { CarouselOrientation } from '@/components/CarouselOrientation';
 import { FooterComponent } from '@/components/FooterComponent';
@@ -11,7 +10,8 @@ import { deleteProduct, getAllProducts, initDB } from '@/utils/db';
 import { PencilIcon, Trash2Icon } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import ConfirmModal from '@/components/ConfirmModal';
-
+import { increaseItemQuantity, openCart, removeFromCart } from '../features/cart/cartSlice'
+import {useDispatch} from 'react-redux'
 interface Product {
   id: number
   name: string
@@ -32,6 +32,8 @@ const ProductDetails = () => {
   const [products, setProducts] = useState<Product[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const dispatch = useDispatch()
 
 
 
@@ -69,7 +71,7 @@ const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
   const id = Number(productId);
 
-  const { increaseItemQuantity, openCart, removeFromCart } = useShoppingCart()
+  
   const product = products.find((product) => product.id == id);
 
   const { user } = useAuth0();
@@ -87,15 +89,15 @@ const ProductDetails = () => {
 
   const handleAddtoCart = () => {
     setCartStatus("Go to Cart")
-    increaseItemQuantity(product.id)
+    dispatch(increaseItemQuantity(product.id))
   }
   const handleGoToCart = () => {
-    openCart();
+    dispatch(openCart());
   }
   const handleBuyNow = () => {
-    increaseItemQuantity(product.id)
+    dispatch(increaseItemQuantity(product.id))
 
-    navigate(`home/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
+    navigate(`/home/products/${product.id}/checkout`, { state: { totalPrice: product.price } });
   };
   const handleEdit = (action: string) => {
 
@@ -106,7 +108,7 @@ const ProductDetails = () => {
   const handleDelete = async () => {
     const db = await initDB();
     deleteProduct(db, product.id)
-    removeFromCart(product.id)
+    dispatch(removeFromCart(product.id))
     navigate('/home/all products');
   }
 

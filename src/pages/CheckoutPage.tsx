@@ -1,10 +1,9 @@
 import { useLocation, useParams } from 'react-router-dom';
-import { useShoppingCart } from '../context/ShoppingCartContext'
 import CheckoutItem from '../components/CheckoutItem';
 import { FooterComponent } from '@/components/FooterComponent';
 import Navbar from '../components/Navbar';
-
-
+import { RootState } from '@/app/store'
+import {useSelector } from 'react-redux'
 const CheckoutPage = () => {
 
   const { id } = useParams<{ id: string }>();
@@ -13,7 +12,7 @@ const CheckoutPage = () => {
   const { totalPrice } = location.state || { totalPrice: 0 };
   console.log(totalPrice)
 
-  const { cartItems } = useShoppingCart();
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   let products = [];
   if (id) {
     products = [{ id: id, quantity: 1 }]

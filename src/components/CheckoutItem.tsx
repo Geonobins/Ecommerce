@@ -59,7 +59,7 @@ const CheckoutItem = ({ id, quantity }: CheckoutItemProps) => {
 
   const item = products.find(i => i.id == id);
   if (item == null) return null;
-  console.log(id)
+  console.log("hello",id)
 
   return (
     <div>

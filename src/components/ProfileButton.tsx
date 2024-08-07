@@ -3,6 +3,10 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 
 import { ChevronDownIcon, LogOutIcon } from 'lucide-react';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
+// import { useEffect } from 'react';
+// import { useDispatch } from 'react-redux';
+// import { setCartItems } from '@/features/cart/cartSlice';
+// import getCartItemsFromLocalStorage from '@/utils/api/getCart';
 // import { useNavigate } from 'react-router-dom';
 
 
@@ -12,7 +16,7 @@ const ProfileButton = () => {
   // const [user, setUser] = useState<any>(null); // Initialize user as null
 
   const { loginWithRedirect, logout, user,  isLoading } = useAuth0();
-  // const navigate = useNavigate();
+
 
   const handleLogin = () => {
 

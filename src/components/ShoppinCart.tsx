@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getAllProducts, initDB } from '@/utils/db'
 import { RootState } from '@/app/store'
-import { closeCart } from '@/features/cart/cartSlice'
-
+import { closeCart, } from '@/features/cart/cartSlice'
+import { useAuth0 } from '@auth0/auth0-react'
+import saveCartItemsToLocalStorage from '@/utils/api/saveCart'
 interface Product {
   id: number;
   name: string;
@@ -21,16 +22,21 @@ interface Product {
   subcategory: string;
 }
 
-type ShoppingCartProps = {
-  isOpen: boolean
-}
+type CartItem = {
+    id: number;
+    quantity: number;
+  };
 
-export default function ShoppingCart({ isOpen }: ShoppingCartProps) {
+
+export default function ShoppingCart() {
   const [products, setProducts] = useState<Product[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useAuth0();
 
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const isOpen = useSelector((state: RootState) => state.cart.isOpen);
+
 
   useEffect(() => {
     const fetchProductsFromDB = async () => {
@@ -42,6 +48,17 @@ export default function ShoppingCart({ isOpen }: ShoppingCartProps) {
     fetchProductsFromDB();
   }, []);
 
+  
+
+  // Save cart items to localStorage whenever cartItems change
+  useEffect(() => {
+    if (user?.email) {
+      saveCartItemsToLocalStorage(user.email, cartItems);
+    }
+  }, [cartItems, user?.email]);
+
+  
+
   const price = cartItems.reduce((total, cartItem) => {
     const item = products.find(i => i.id === cartItem.id);
     return total + (item?.price || 0) * cartItem.quantity;
@@ -52,8 +69,12 @@ export default function ShoppingCart({ isOpen }: ShoppingCartProps) {
     dispatch(closeCart());
   };
 
+  const handleCloseCart = () => {
+    dispatch(closeCart())
+  };
+
   return (
-    <Dialog open={isOpen} onClose={() => dispatch(closeCart())} className="relative z-50">
+    <Dialog open={isOpen} onClose={handleCloseCart} className="relative z-50">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-500 ease-in-out data-[closed]:opacity-0"
@@ -73,7 +94,7 @@ export default function ShoppingCart({ isOpen }: ShoppingCartProps) {
                     <div className="ml-3 flex h-7 items-center">
                       <button
                         type="button"
-                        onClick={() => dispatch(closeCart())}
+                        onClick={handleCloseCart}
                         className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                       >
                         <span className="absolute -inset-0.5" />

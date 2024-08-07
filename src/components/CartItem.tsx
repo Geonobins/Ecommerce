@@ -1,8 +1,9 @@
 import ButtonComponent from './ButtonComponent';
-import { useShoppingCart } from '../context/ShoppingCartContext';
 import { useEffect, useState } from 'react';
 // import axios from 'axios';
+import {useDispatch} from 'react-redux'
 import { getAllProducts, initDB } from '@/utils/db';
+import { decreaseItemQuantity, increaseItemQuantity, removeFromCart } from '../features/cart/cartSlice'
 
 type CartItemProps = {
     id: number
@@ -24,7 +25,7 @@ interface Product {
 
 const CartItem = ({ id, quantity }: CartItemProps) => {
     const [products, setProducts] = useState<Product[]>([]);
-    const { decreaseItemQuantity, increaseItemQuantity, removeFromCart } = useShoppingCart();
+    const dispatch = useDispatch()
 
     // useEffect(() => {
     //     console.log('Fetching products...');
@@ -58,15 +59,15 @@ const CartItem = ({ id, quantity }: CartItemProps) => {
     if (item == null) return null;
 
     const handleDecrease = () => {
-        decreaseItemQuantity(id);
+        dispatch(decreaseItemQuantity(id));
     }
 
     const handleIncrease = () => {
-        increaseItemQuantity(id);
+        dispatch(increaseItemQuantity(id));
     }
 
     const handleRemove = () => {
-        removeFromCart(id);
+        dispatch(removeFromCart(id));
     }
 
     return (

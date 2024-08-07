@@ -1,48 +1,43 @@
 import { useNavigate } from 'react-router-dom';
-import { useShoppingCart } from '../context/ShoppingCartContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { increaseItemQuantity, decreaseItemQuantity, getItemQuantity } from '@/features/cart/cartSlice';
+import { useAuth0 } from '@auth0/auth0-react';
 import CartButton from './CartButton';
 import ButtonComponent from './ButtonComponent';
 import Cart from '../icons/shopping-cart.png';
-import { useAuth0 } from '@auth0/auth0-react';
-
+import { RootState } from '@/app/store';
 
 const Card = (props: any) => {
   const navigate = useNavigate();
-
-
-
-
-  const { isAuthenticated } = useAuth0(); // Check if user is authenticated
-
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useAuth0();
+  const quantity = useSelector((state: RootState) => getItemQuantity(state, props.id));
   const handleClick = () => {
     navigate(`/home/products/${props.id}`);
   };
 
   const handleBuyNow = (event: { stopPropagation: () => void; }) => {
-    event.stopPropagation(); // Prevents the event from bubbling up to the parent div
+    event.stopPropagation();
     if (isAuthenticated) {
-      navigate(`/home/products/${props.id}/checkout`, { state: { totalPrice: props.price } });
+      navigate(`/home/products/${props.id}/checkout`, { state: { totalPrice: props.price * quantity } });
     } else {
       alert('Please log in to proceed with the purchase.');
     }
-  };
-  const { getItemQuantity, increaseItemQuantity, decreaseItemQuantity } = useShoppingCart()
-  const quantity = getItemQuantity(props.id);
-
-  const handleDecreaseCart = (event: { stopPropagation: () => void; }) => {
-    event.stopPropagation();
-    if (isAuthenticated) {
-      decreaseItemQuantity(props.id);
-    }
-
   };
 
   const handleIncreaseCart = (event: { stopPropagation: () => void; }) => {
     event.stopPropagation();
     if (isAuthenticated) {
-      increaseItemQuantity(props.id);
+      dispatch(increaseItemQuantity(props.id));
     } else {
-      alert("Login to manage cart")
+      alert("Login to manage cart");
+    }
+  };
+
+  const handleDecreaseCart = (event: { stopPropagation: () => void; }) => {
+    event.stopPropagation();
+    if (isAuthenticated) {
+      dispatch(decreaseItemQuantity(props.id));
     }
   };
   return (
