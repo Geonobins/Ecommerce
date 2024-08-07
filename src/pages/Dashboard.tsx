@@ -7,7 +7,7 @@ import { UserRoundIcon } from 'lucide-react';
 
 
 
-const ProfilesPage = () => {
+const Dashboard = () => {
 
     const {user} = useAuth0();
     return (
@@ -16,12 +16,11 @@ const ProfilesPage = () => {
         <Navbar/>
             <div className='mt-32 ml-4 flex'>
             <Sidebar/>
-            <div className='w-full flex flex-col items-center justify-center text-gray-'>
-                <div>
-                    <UserRoundIcon className='size-44'/>
-                </div>
-            <p>{user?.nickname}</p>
-            <p>{user?.email}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full p-8">
+            <div className='flex bg-red-400 items-center justify-center rounded-xl '>01</div>
+            <div className='flex bg-red-400 items-center justify-center rounded-xl'>02</div>
+            <div className='flex bg-red-400 items-center justify-center rounded-xl'>03</div>
+            <div className='flex bg-red-400 items-center justify-center rounded-xl'> 04</div>
             </div>
             </div>
             
@@ -33,4 +32,4 @@ const ProfilesPage = () => {
     );
 }
 
-export default ProfilesPage
+export default Dashboard

@@ -3,6 +3,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 
 import { ChevronDownIcon, LogOutIcon } from 'lucide-react';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
+import { useNavigate } from 'react-router-dom';
 // import { useEffect } from 'react';
 // import { useDispatch } from 'react-redux';
 // import { setCartItems } from '@/features/cart/cartSlice';
@@ -16,7 +17,7 @@ const ProfileButton = () => {
   // const [user, setUser] = useState<any>(null); // Initialize user as null
 
   const { loginWithRedirect, logout, user,  isLoading } = useAuth0();
-
+  const navigate = useNavigate()
 
   const handleLogin = () => {
 
@@ -31,6 +32,7 @@ const ProfileButton = () => {
       console.error(error);
     }
   };
+
 
   //  // Update user state if authUser changes
   //  useEffect(() => {
@@ -61,7 +63,7 @@ const ProfileButton = () => {
 
           {user ?
             <div >
-              <div className='cursor-pointer flex flex-col hover:text-black'>
+              <div className='cursor-pointer flex flex-col hover:text-black' onClick={()=>navigate("/home/profile")}>
                 <p className='text-md'>{`Hello ${user.nickname}`}</p>
                 <p className='text-sm'>{user.email}</p>
               </div>

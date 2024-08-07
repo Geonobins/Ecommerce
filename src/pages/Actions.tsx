@@ -7,7 +7,7 @@ import { UserRoundIcon } from 'lucide-react';
 
 
 
-const ProfilesPage = () => {
+const Actions = () => {
 
     const {user} = useAuth0();
     return (
@@ -17,11 +17,7 @@ const ProfilesPage = () => {
             <div className='mt-32 ml-4 flex'>
             <Sidebar/>
             <div className='w-full flex flex-col items-center justify-center text-gray-'>
-                <div>
-                    <UserRoundIcon className='size-44'/>
-                </div>
-            <p>{user?.nickname}</p>
-            <p>{user?.email}</p>
+                Actions
             </div>
             </div>
             
@@ -33,4 +29,4 @@ const ProfilesPage = () => {
     );
 }
 
-export default ProfilesPage
+export default Actions
