@@ -14,7 +14,7 @@ const ProfilesPage = () => {
         <div>
         <div className='flex-1'>
         <Navbar/>
-            <div className='mt-32 ml-4 flex'>
+            <div className='mt-24 ml-4 flex'>
             <Sidebar/>
             <div className='w-full flex flex-col items-center justify-center text-gray-'>
                 <div>

@@ -24,14 +24,22 @@ const App = () => {
   const isAdmin = user?.nickname === "admin";
   console.log("admin?", isAdmin);
 
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems || []);
 
   useEffect(() => {
     if (user?.email) {
-      const storedCarts = getCartItemsFromLocalStorage(user.email);
+      let storedCarts = getCartItemsFromLocalStorage(user.email);
+      storedCarts = Array.isArray(storedCarts) ? storedCarts : [];
+      console.log("storedcarts", storedCarts);
+
       dispatch(validateCartItems(storedCarts))
-        .unwrap()
-        .then((validItems: { id: number; quantity: number; }[]) => dispatch(setCartItems(validItems)));
+        .then((action: { payload: never[]; }) => {
+          const validItems = action.payload || [];
+          dispatch(setCartItems(validItems));
+        })
+        .catch((error: any) => {
+          console.error('Error validating cart items:', error);
+        });
     }
   }, [isAuthenticated, user?.email, dispatch]);
 

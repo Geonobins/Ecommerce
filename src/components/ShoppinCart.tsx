@@ -34,7 +34,7 @@ export default function ShoppingCart() {
   const navigate = useNavigate();
   const { user } = useAuth0();
 
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems || []);
   const isOpen = useSelector((state: RootState) => state.cart.isOpen);
 
 

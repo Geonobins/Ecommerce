@@ -11,10 +11,10 @@ const Sidebar = () => {
     { name: "Dashboard", link: "/home/profile/dashboard", icon: MdOutlineDashboard },
     { name: "Actions", link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
   ];
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
-    <section className="flex gap-6 p-2">
+    <section className="flex gap-6 p-2 sticky">
       <div
         className={`bg-slate-100 min-h-screen rounded-xl ${open ? "md:w-72" : "w-16"} duration-500 text-slate-400 px-4`}
       >
