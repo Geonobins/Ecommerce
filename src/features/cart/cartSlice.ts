@@ -96,7 +96,7 @@ export const getItemQuantity = (state: RootState, id: number) =>
   state.cart.cartItems.find(item => item.id === id)?.quantity || 0;
 
 export const getCartQuantity = (state: RootState) => 
-  state.cart.cartItems.reduce((total, item) => total + item.quantity, 0);
+  state.cart.cartItems.length;
 // export const getCartQuantity = (state: RootState, id: number) =>
 //   state.cart.cartItems.find(item => item.id === id)?.quantity || 0;
 

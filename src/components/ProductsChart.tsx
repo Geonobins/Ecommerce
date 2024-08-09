@@ -17,6 +17,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import {SalesData} from "@/data/SalesData"
+import ButtonComponent from "./ButtonComponent"
+import { useState } from "react"
 const chartData = SalesData
 
 const chartConfig = {
@@ -40,10 +42,27 @@ const chartConfig = {
 
 
 export function ProductsChart() {
+  const[livingFilter,setLivingFilter] = useState(true)
+  const[bedroomFilter,setBedroomFilter] = useState(true)
+  const[diningFilter,setDiningFilter] = useState(true)
+
+
   return (
     <Card className="min-w-[80%]">
       <CardHeader>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Sales
+          <div className="flex text-sm  gap-6  justify-center"> 
+            <div onClick={()=>setLivingFilter(!livingFilter)}>
+            <ButtonComponent value="Living"  cl={`border border-orange-700 hover:bg-orange-300 ${livingFilter && "bg-orange-400"}`}/>
+            </div>
+            <div onClick={()=>setBedroomFilter(!bedroomFilter)}>
+            <ButtonComponent value="Bedroom" cl={`border border-blue-700 hover:bg-blue-300 ${bedroomFilter && "bg-blue-400"}`}/>
+            </div>
+            <div onClick={()=>setDiningFilter(!diningFilter)}>
+            <ButtonComponent value="Dining" cl={`border border-green-700 hover:blue-green-300 ${diningFilter && "bg-green-400"}`}/>
+            </div>
+          </div>
+        </CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -64,28 +83,34 @@ export function ProductsChart() {
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip cursor={true} isAnimationActive={true} content={<ChartTooltipContent />} />
-            <Line
+            <ChartTooltip cursor={true}  content={<ChartTooltipContent />} />
+            {livingFilter &&<Line
               dataKey="livingroom"
               type="monotone"
               stroke="hsl(var(--chart-1))"
               strokeWidth={2}
               dot={false}
-            />
-            <Line
-              dataKey="dining"
-              type="monotone"
-              stroke="hsl(var(--chart-2))"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
+            
+              
+            />}
+           
+            {bedroomFilter && <Line
               dataKey="bedroom"
               type="monotone"
               stroke="hsl(var(--chart-3))"
               strokeWidth={2}
               dot={false}
-            />
+              
+            />}
+             {diningFilter && <Line
+              dataKey="dining"
+              type="monotone"
+              stroke="hsl(var(--chart-2))"
+              strokeWidth={2}
+              dot={false}
+              
+            />}
+            
             
           </LineChart>
         </ChartContainer>

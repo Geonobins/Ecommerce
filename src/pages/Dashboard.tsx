@@ -21,13 +21,13 @@ const Dashboard = () => {
             <div className='flex  items-center justify-center rounded-xl '>
                 <Overview/>
             </div>
-            <div className='flex items-center justify-center rounded-xl hover:drop-shadow-xl hover:-translate-y-1.5 duration-200'>
+            <div className='flex items-center justify-center rounded-xl drop-shadow-xl hover:-translate-y-1.5 duration-200'>
                 <ProductsChart/>
             </div>
-            <div className='flex items-center justify-center rounded-xl hover:drop-shadow-xl hover:-translate-y-1.5 duration-200'>
+            <div className='flex items-center justify-center rounded-xl drop-shadow-xl hover:-translate-y-1.5 duration-200'>
             <UserChart/>
             </div>
-            <div className='flex items-center justify-center rounded-xl hover:drop-shadow-xl hover:-translate-y-1.5 duration-200 '> 
+            <div className='flex items-center justify-center rounded-xl drop-shadow-xl hover:-translate-y-1.5 duration-200 '> 
             <DashboardTable/>
             </div>
             </div>

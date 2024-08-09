@@ -7,11 +7,12 @@ type TableStructure = {
 type TableComponentProps = {
   tableStructure: TableStructure[];
   tableData: Record<string, any>[]; // Assuming table data is an array of objects with string keys
+  handleRowClick?: (rowIndex:number)=> void
 };
 
 const Table: React.FC<TableComponentProps> = ({
   tableStructure,
-  tableData,
+  tableData,handleRowClick
 }) => {
   return (
     <div className="overflow-x-auto min-w-[100%] max-h-[100%]  rounded-2xl shadow-2xl"> 
@@ -27,9 +28,9 @@ const Table: React.FC<TableComponentProps> = ({
           </thead>
           <tbody className="max-h-[400px] overflow-y-auto bg-white">
             {tableData.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+              <tr key={rowIndex}  className="hover:bg-slate-100 cursor-pointer">
                 {tableStructure.map((column) => (
-                  <td key={column.name} className="py-2 px-4 border-b">
+                  <td key={column.name} className="py-2 px-4 border-b " onClick={()=>handleRowClick && handleRowClick(row.id)}>
                     {row[column.name]}
                   </td>
                 ))}

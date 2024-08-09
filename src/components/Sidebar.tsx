@@ -16,7 +16,7 @@ const Sidebar = () => {
   return (
     <section className="flex gap-6 p-2 sticky">
       <div
-        className={`bg-slate-100 min-h-screen rounded-xl ${open ? "md:w-72" : "w-16"} duration-500 text-slate-400 px-4`}
+        className={`bg-slate-100 min-h-screen rounded-xl ${open ? "md:w-72" : "w-16"} duration-500 text-slate-400 px-4 shadow-xl` }
       >
         <div className="py-3 flex justify-end">
           <HiMenuAlt3
