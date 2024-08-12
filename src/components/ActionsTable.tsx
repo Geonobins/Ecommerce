@@ -49,7 +49,7 @@ const ActionsTable = () => {
       }
   return (
     <div className=" min-w-[80%] max-h-[80%] ">
-      <Table tableStructure={tableStructure} tableData={tableData} handleRowClick={handleRowClick}/>
+      <Table tableStructure={tableStructure} tableData={tableData} isHover={true} handleRowClick={handleRowClick}/>
     </div>
   )
 }

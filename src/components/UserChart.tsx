@@ -15,8 +15,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import {UserData} from "@/data/UserData"
-const chartData = UserData
+import {fetchUserData,UserType} from "@/data/UserData"
+import { useEffect, useState } from "react"
+
 
 const chartConfig = {
   users: {
@@ -31,6 +32,22 @@ const chartConfig = {
 
 
 export function UserChart() {
+
+  const [userData, setUserData] = useState<UserType[]>([]);
+
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchUserData();
+      setUserData(data.slice(0,6));
+    };
+
+    getData();
+    
+  }, []);
+  
+  
+
   return (
     <Card className="min-w-[80%]">
       <CardHeader>
@@ -41,7 +58,7 @@ export function UserChart() {
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={userData}
             layout="vertical"
             margin={{
               right: 16,

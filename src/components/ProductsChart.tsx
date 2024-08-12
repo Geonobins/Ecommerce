@@ -16,10 +16,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import {SalesData} from "@/data/SalesData"
+import {fetchSalesData,SalesType} from "@/data/SalesData"
 import ButtonComponent from "./ButtonComponent"
-import { useState } from "react"
-const chartData = SalesData
+import { useEffect, useState } from "react"
+
 
 const chartConfig = {
   livingroom: {
@@ -45,7 +45,19 @@ export function ProductsChart() {
   const[livingFilter,setLivingFilter] = useState(true)
   const[bedroomFilter,setBedroomFilter] = useState(true)
   const[diningFilter,setDiningFilter] = useState(true)
+  const [salesData, setSalesData] = useState<SalesType[]>([]);
 
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchSalesData();
+      setSalesData(data.slice(0,6));
+    };
+
+    getData();
+    
+  }, []);
+  
 
   return (
     <Card className="min-w-[80%]">
@@ -69,7 +81,7 @@ export function ProductsChart() {
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={salesData}
             margin={{
               left: 12,
               right: 12,
