@@ -20,7 +20,7 @@ const initialState: CartState = {
 };
 
 // Async thunk to validate cart items
-export const validateCartItems = createAsyncThunk(
+export const validateCartItems = createAsyncThunk<CartItem[], CartItem[]>(
   'cart/validateCartItems',
   async (items: CartItem[]) => {
     const db = await initDB();
@@ -35,11 +35,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     openCart(state) {
-      console.log("helloagin")
       state.isOpen = true;
     },
     closeCart(state) {
-      console.log("closing cart")
       state.isOpen = false;
     },
     increaseItemQuantity(state, action: PayloadAction<number>) {

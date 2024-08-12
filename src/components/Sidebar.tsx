@@ -4,12 +4,20 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { RiSettings4Line } from "react-icons/ri";
 import { AiOutlineUser } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Sidebar = () => {
+  const {user} = useAuth0()
+  const isAdmin = user?.nickname === "admin";
+
   const menus = [
     { name: "User", link: "/home/profile", icon: AiOutlineUser },
-    { name: "Dashboard", link: "/home/profile/dashboard", icon: MdOutlineDashboard },
-    { name: "Actions", link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
+    ...(isAdmin
+      ? [
+          { name: "Dashboard", link: "/home/profile/dashboard", icon: MdOutlineDashboard },
+          { name: "Actions", link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
+        ]
+      : []),
   ];
   const [open, setOpen] = useState(false);
 

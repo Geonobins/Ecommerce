@@ -10,17 +10,20 @@ import { useEffect } from 'react';
 import { addProducts, initDB } from './utils/db';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { setCartItems, validateCartItems } from '@/features/cart/cartSlice';
 import getCartItemsFromLocalStorage from '@/utils/api/getCart';
 import { RootState } from './app/store';
 import saveCartItemsToLocalStorage from './utils/api/saveCart';
 import Actions from './pages/Actions';
 import Dashboard from './pages/Dashboard';
+import useThunkDispatch from './hooks/useThunkDispatch';
+
+
 
 const App = () => {
   const { user, isAuthenticated } = useAuth0();
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
   const isAdmin = user?.nickname === "admin";
   console.log("admin?", isAdmin);
 
@@ -32,8 +35,8 @@ const App = () => {
       storedCarts = Array.isArray(storedCarts) ? storedCarts : [];
       console.log("storedcarts", storedCarts);
 
-      dispatch(validateCartItems(storedCarts))
-        .then((action: { payload: never[]; }) => {
+       dispatch(validateCartItems(storedCarts))
+        .then((action: { payload: any}) => {
           const validItems = action.payload || [];
           dispatch(setCartItems(validItems));
         })
@@ -80,8 +83,8 @@ const App = () => {
       <Routes>
         <Route path="/home" index element={<HomePage />} />
         <Route path="/home/profile" element={<ProfilesPage />} />
-        <Route path="/home/profile/dashboard" element={<Dashboard />} />
-        <Route path="/home/profile/actions" element={<Actions />} />
+        <Route path="/home/profile/dashboard" element={isAdmin? <Dashboard /> : <NotFoundPage/>} />
+        <Route path="/home/profile/actions" element={isAdmin?<Actions /> : <NotFoundPage/>} />
         <Route path="/home/products/:productId" element={<ProductDetails />} />
         <Route path="/home/products/:id/checkout" element={<CheckoutPage />} />
         <Route path="/home/products/checkout" element={<CheckoutPage />} />

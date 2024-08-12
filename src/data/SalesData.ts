@@ -14,7 +14,7 @@ export const SalesData: SalesType[] = [
 ]
 ;
 
-export const Profit=-123
+
 
 
 
