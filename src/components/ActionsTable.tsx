@@ -48,8 +48,8 @@ const ActionsTable = () => {
 
       }
   return (
-    <div className=" min-w-[80%] max-h-[80%] ">
-      <Table tableStructure={tableStructure} tableData={tableData} isHover={true} handleRowClick={handleRowClick}/>
+    <div className=" max-w-[100%] max-h-[80%] overflow-hidden">
+      <Table tableStructure={tableStructure} tableData={tableData} isHover={true} handleRowClick={handleRowClick} emphasis="availability" maxvalue={100}/>
     </div>
   )
 }

@@ -4,7 +4,6 @@ import App from './App'
 import './index.css'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import { ThemeProvider } from '@material-tailwind/react'
 import {Auth0Provider} from '@auth0/auth0-react';
 import { REACT_APP_AUTH0_CLIENT_ID, REACT_APP_AUTH0_DOMAIN } from './env'
 import { store } from './app/store'
@@ -29,12 +28,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       
       
     
-    <ThemeProvider>
+    
     <Provider store={store}>
       <App/>
       <ShoppingCart/>
     </Provider>
-      </ThemeProvider>
+      
       </Auth0Provider>
     </BrowserRouter>
     

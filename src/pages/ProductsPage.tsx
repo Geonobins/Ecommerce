@@ -7,6 +7,8 @@ import { FooterComponent } from '@/components/FooterComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import AddProductButton from '@/components/AddProductButton';
 import { getAllProducts, initDB } from '@/utils/db';
+import Breadcrumbs from '@/components/Breadcrumbs';
+
 
 interface Product {
   id: number;
@@ -85,13 +87,14 @@ export const ProductsPage = () => {
     <div className="flex"> 
         </div>
         <div className="sort-dropdown px-11">
-          <select value={sortOrder} onChange={handleSortChange}>
+          <select value={sortOrder} onChange={handleSortChange} className='m-6 xl:m-0 rounded-lg bg-white xl:p-3 hover:bg-slate-100'> 
             <option value="">Sort by Price</option>
             <option value="lowToHigh">Low to High</option>
             <option value="highToLow">High to Low</option>
           </select>
         </div>
-
+        <div className='flex flex-col items-center'>
+          <Breadcrumbs/>
         <div className="flex flex-row flex-wrap gap-3 px-10 items-center justify-center">
           {user?.nickname === "admin" && <AddProductButton />}
           {filteredProducts.map((product) => (
@@ -104,6 +107,7 @@ export const ProductsPage = () => {
               image={product.thumbnail}
             />
           ))}
+        </div>
         </div>
       </div>
       </div>

@@ -82,6 +82,7 @@ const App = () => {
     <div>
       <Routes>
         <Route path="/home" index element={<HomePage />}  />
+        <Route path="/home/products"  element={<ProductsPage />}  />
         <Route path="/home/profile" element={<ProfilesPage />} />
         <Route path="/home/profile/dashboard" element={isAdmin? <Dashboard /> : <NotFoundPage/>} />
         <Route path="/home/profile/actions" element={isAdmin?<Actions /> : <NotFoundPage/>} />

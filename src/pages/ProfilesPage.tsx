@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Sidebar  from '../components/Sidebar'
 import { useAuth0 } from '@auth0/auth0-react';
 import { UserRoundIcon } from 'lucide-react';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 
 
@@ -17,7 +18,8 @@ const ProfilesPage = () => {
             <div className='mt-24 ml-4 flex'>
             <Sidebar/>
             <div className='w-full flex flex-col items-center justify-center text-gray-'>
-                <div>
+                <Breadcrumbs/>
+                <div className='flex items-center justify-center w-full h-full'>
                     <UserRoundIcon className='size-44'/>
                 </div>
             <p>{user?.nickname}</p>

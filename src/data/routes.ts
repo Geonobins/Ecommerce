@@ -1,14 +1,35 @@
 
 
-export const routes = [
-    { path: '/home', breadcrumb: 'Home', },
-    { path: '/home/profile', breadcrumb: 'Profile' },
-    { path: '/home/profile/dashboard', breadcrumb: 'Dashboard' },
-    { path: '/home/profile/actions', breadcrumb: 'Actions' },
-
-    { path: '/home/all products', breadcrumb: 'AllProducts' },
-
-    // Add more routes as needed
-  ];
+export const routes = {
+  "home": {
+    path : "/home",
+    breadcrumb: "Home"
+  },
+  "all products": {
+    path : "/home/all products",
+    breadcrumb: "All Products"
+  } ,
+  "Living Room": {
+    path : "/home/Living Room",
+    breadcrumb: "Living Room"
+  } ,
+  "products": {
+    path : "/home/all products",
+    breadcrumb: "Products"
+  } ,
+   "profile": {
+    path : "/home/profile",
+    breadcrumb: "Profile"
+  } ,
+  "dashboard": {
+    path : "/home/profile/dashboard",
+    breadcrumb: "Dashboard"
+  } ,
+  "Actions": {
+    path : "/home/profile/actions",
+    breadcrumb: "actions"
+  } ,
+  
+}
 
   export default routes;

@@ -12,6 +12,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import ConfirmModal from '@/components/ConfirmModal';
 import { increaseItemQuantity, openCart, removeFromCart } from '../features/cart/cartSlice'
 import {useDispatch} from 'react-redux'
+import Breadcrumbs from '@/components/Breadcrumbs';
 interface Product {
   id: number
   name: string
@@ -119,8 +120,11 @@ const ProductDetails = () => {
     <div className='flex flex-col min-h-screen '>
       <div className='flex-1'>
         <Navbar />
-        <div className='flex flex-col my-20'>
+        {/* <div className='flex flex-col my-20 items-center p-10'> */}
+        
+        <Breadcrumbs/>
         <div className="max-w-7xl w-full mx-auto my-24 shadow-md px-4">
+          
           <div className="flex flex-wrap justify-around py-2.5" key={product.id}>
             <div className="max-w-lg min-w-[290px] overflow-hidden m-6.25">
               <img
@@ -185,7 +189,7 @@ const ProductDetails = () => {
           <ProductCarousel category={product.subcategory} />
         </div>
       </div>
-      </div>
+      {/* </div> */}
       <FooterComponent />
       
           <ConfirmModal

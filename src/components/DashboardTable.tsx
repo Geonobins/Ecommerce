@@ -37,12 +37,12 @@ const DashboardTable = () => {
         
         price: "$"+product.price,
         availability: product.availability
-      }));
+      })).filter((product)=> product.availability < 100);
 
     
   return (
-    <div className="shadow-xl h-[400px] overflow-hidden max-w-[80%]">
-      <Table tableStructure={tableStructure} tableData={tableData}/>
+    <div className="flex items-center h-[400px] overflow-hidden max-w-[80%]">
+      <Table tableStructure={tableStructure} tableData={tableData} emphasis="availability" maxvalue={100}/>
 
       
     </div>
