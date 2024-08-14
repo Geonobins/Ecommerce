@@ -123,7 +123,7 @@ const AddProductPage = () => {
             <div className="flex-1 flex-col ">
             <Navbar />
             <div className="flex items-center justify-center h-full my-28 md:mx-2">
-                <div className="min-w-[90%]">
+                <div className="min-w-[90%] border rounded-2xl p-6">
                     {action === "addproduct" && <center><p className="text-4xl">Add a Product</p></center>}
                     {action === "edit" && <center><p className="text-4xl">Edit Product</p></center>}
                     <div className="max-w-md mx-auto">
@@ -198,12 +198,14 @@ const AddProductPage = () => {
                                     existingImages={existingImages}
                                 />
                             </div>
+                            <div className="w-full flex justify-center">
                             <button
                                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 my-7"
                                 onClick={handleFormSubmit}
                             >
                                 {action === "addproduct" ? "Add Product" : "Save Changes"}
                             </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -40,7 +40,7 @@ const App = () => {
 
        dispatch(validateCartItems(storedCarts))
         .then((action: { payload: any}) => {
-          const validItems = action.payload || [];
+          const validItems = action.payload ?? [];
           dispatch(setCartItems(validItems));
         })
         .catch((error: any) => {

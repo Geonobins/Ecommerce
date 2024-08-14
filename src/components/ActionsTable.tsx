@@ -38,7 +38,7 @@ const ActionsTable = () => {
       const tableData = products.map(product => ({
         id: product.id,
         name: product.name,
-        category: product.category.join(","),
+        category: product.category,
         price: "$"+product.price,
         availability: product.availability
       }));
