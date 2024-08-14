@@ -1,24 +1,42 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CheckoutItem from '../components/CheckoutItem';
 import { FooterComponent } from '@/components/FooterComponent';
 import Navbar from '../components/Navbar';
 import { RootState } from '@/app/store'
-import {useSelector } from 'react-redux'
+import {useDispatch, useSelector } from 'react-redux'
+import { useAuth0 } from '@auth0/auth0-react';
+import { addOrder } from '@/features/orders/ordersSlice';
+import { clearCart } from '@/features/cart/cartSlice';
 const CheckoutPage = () => {
 
   const { id } = useParams<{ id: string }>();
   // const [products, setProducts] = useState<Product[]>([]);
+  const {user} = useAuth0()
   const location = useLocation();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { totalPrice } = location.state || { totalPrice: 0 };
   console.log(totalPrice)
 
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   let products = [];
   if (id) {
-    products = [{ id: id, quantity: 1 }]
+    products = [{ id: Number(id), quantity: 1 }]
   } else {
     products = cartItems;
     console.log(products)
+  }
+  const handleCheckout = ()=>
+  {
+    if (user?.email) {
+      dispatch(addOrder({ email: user.email, products }));
+      if(!id){
+        dispatch(clearCart())
+      }
+      // Proceed with checkout, e.g., redirect to a success page
+      navigate("/home")
+      
+    }
   }
 
   return (
@@ -52,7 +70,7 @@ const CheckoutPage = () => {
                   <p className="text-sm text-gray-700">including VAT</p>
                 </div>
               </div>
-              <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">Confirm Purchase</button>
+              <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600" onClick={handleCheckout}>Confirm Purchase</button>
             </div>
           </div>
         </div>

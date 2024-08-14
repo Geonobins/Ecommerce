@@ -5,6 +5,7 @@ import { RiSettings4Line } from "react-icons/ri";
 import { AiOutlineUser } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { BoxIcon, ListIcon } from "lucide-react";
 
 const Sidebar = () => {
   const {user} = useAuth0()
@@ -15,9 +16,11 @@ const Sidebar = () => {
     ...(isAdmin
       ? [
           { name: "Dashboard", link: "/home/profile/dashboard", icon: MdOutlineDashboard },
-          { name: "Actions", link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
+          { name: "Inventory", link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
+          { name: "Orders", link: "/home/profile/orderslist", icon: ListIcon },
         ]
       : []),
+      {name: "My Orders", link: "/home/profile/myorders", icon: BoxIcon}
   ];
   const [open, setOpen] = useState(false);
 

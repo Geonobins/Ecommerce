@@ -18,6 +18,8 @@ import saveCartItemsToLocalStorage from './utils/api/saveCart';
 import Actions from './pages/Actions';
 import Dashboard from './pages/Dashboard';
 import useThunkDispatch from './hooks/useThunkDispatch';
+import MyOrdersPage from './pages/MyOrdersPage';
+import OrdersList from './pages/OrdersList';
 
 
 
@@ -28,7 +30,8 @@ const App = () => {
   console.log("admin?", isAdmin);
 
   const cartItems = useSelector((state: RootState) => state.cart.cartItems || []);
-
+  //--------------------------------------------UseEffects for persistent Cart--------------------------------------------------
+  //Get cart Items from localstorage
   useEffect(() => {
     if (user?.email) {
       let storedCarts = getCartItemsFromLocalStorage(user.email);
@@ -45,13 +48,14 @@ const App = () => {
         });
     }
   }, [isAuthenticated, user?.email, dispatch]);
-
+  //store Cart Items whenever the cartItems change
   useEffect(() => {
     if (user?.email) {
       saveCartItemsToLocalStorage(user.email, cartItems);
     }
   }, [cartItems, user?.email]);
-
+//--------------------------------------------------------------------------------------------  
+  //Fetch products from IndexedDB upon loading the app
   useEffect(() => {
     const fetchAndStoreProducts = async () => {
       const db = await initDB();
@@ -86,6 +90,8 @@ const App = () => {
         <Route path="/home/profile" element={<ProfilesPage />} />
         <Route path="/home/profile/dashboard" element={isAdmin? <Dashboard /> : <NotFoundPage/>} />
         <Route path="/home/profile/actions" element={isAdmin?<Actions /> : <NotFoundPage/>} />
+        <Route path="/home/profile/myorders" element={<MyOrdersPage />} />
+        <Route path="/home/profile/orderslist" element={<OrdersList />} />
         <Route path="/home/products/:productId" element={<ProductDetails />} />
         <Route path="/home/products/:id/checkout" element={<CheckoutPage />} />
         <Route path="/home/products/checkout" element={<CheckoutPage />} />
