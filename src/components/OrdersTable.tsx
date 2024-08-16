@@ -95,7 +95,7 @@ const OrdersTable: React.FC = () => {
                     onClick={() => handleStatusToggle(row.OrderId)}
                   />
                   {/* Tooltip */}
-                  <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 text-xs bg-white text-black shadow-md px-2 py-1 rounded-md transition-opacity duration-500">
+                  <span className="absolute bottom-1 right-[10%] transform -translate-x-1/2 opacity-0 group-hover:opacity-100 text-xs bg-white text-black shadow-md px-2 py-1 rounded-md transition-opacity duration-500">
                     Ship
                   </span>
                 </div>
@@ -106,7 +106,7 @@ const OrdersTable: React.FC = () => {
                     onClick={() => handleStatusToggle(row.OrderId)}
                   />
                   {/* Tooltip */}
-                  <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 text-xs bg-white text-black shadow-md px-2 py-1 rounded-md transition-opacity duration-500">
+                  <span className="absolute bottom-1 right-[10%] transform -translate-x-1/2 opacity-0 group-hover:opacity-100 text-xs bg-white text-black shadow-md px-2 py-1 rounded-md transition-opacity duration-500">
                     Cancel
                   </span>
                 </div>

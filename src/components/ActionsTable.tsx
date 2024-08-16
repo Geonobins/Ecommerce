@@ -9,49 +9,57 @@ type Product = {
     category: string[];
     price: string;
     availability: number;
-    
-  };
+};
 
-
-const ActionsTable = () => {
-
+const ActionsTable = ({ visibleColumns }: { visibleColumns: string[] }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const db = await initDB();
-      const stored = await getAllProducts(db);
-      setProducts(stored);
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const db = await initDB();
+            const stored = await getAllProducts(db);
+            setProducts(stored);
+        };
 
-    fetchData();
-  }, []);
+        fetchData();
+    }, []);
+
     const tableStructure = [
         { name: "id" },
         { name: "name" },
         { name: "category" },
         { name: "price" },
         { name: "availability" },
-      ];
-      
-      const tableData = products.map(product => ({
+    ];
+
+    const tableData = products.map(product => ({
         id: product.id,
         name: product.name,
-        category: product.category,
-        price: "$"+product.price,
+        category: product.category.join(", "),
+        price: "$" + product.price,
         availability: product.availability
-      }));
+    }));
 
-      const handleRowClick = (id:number) =>{
-            navigate(`/home/products/${id}`)
+    // Filter the table structure based on visible columns
+    const filteredTableStructure = tableStructure.filter(column => visibleColumns.includes(column.name));
 
-      }
-  return (
-    <div className=" max-w-[100%] max-h-[80%] overflow-hidden">
-      <Table tableStructure={tableStructure} tableData={tableData} isHover={true} handleRowClick={handleRowClick} emphasis="availability" maxvalue={100}/>
-    </div>
-  )
-}
+    const handleRowClick = (id: number) => {
+        navigate(`/home/products/${id}`);
+    };
 
-export default ActionsTable
+    return (
+        <div className="max-w-[100%] max-h-[80%] overflow-hidden">
+            <Table 
+                tableStructure={filteredTableStructure} 
+                tableData={tableData} 
+                isHover={true} 
+                handleRowClick={handleRowClick} 
+                emphasis="availability" 
+                maxvalue={100} 
+            />
+        </div>
+    );
+};
+
+export default ActionsTable;
