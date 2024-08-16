@@ -8,11 +8,13 @@ type SortOrder = "asc" | "desc" | null;
 
 type TableComponentProps = {
   tableStructure: TableStructure[];
-  tableData: Record<string, any>[]; // Assuming table data is an array of objects with string keys
+  tableData: Record<string, any>[];
   handleRowClick?: (rowIndex: number) => void;
   isHover?: boolean;
+  isTableHover?: boolean;
   emphasis?: string;
   maxvalue?: number;
+  renderCustomContent?: (columnName: string, row: Record<string, any>) => React.ReactNode;
 };
 
 const Table: React.FC<TableComponentProps> = ({
@@ -20,15 +22,16 @@ const Table: React.FC<TableComponentProps> = ({
   tableData,
   handleRowClick,
   isHover,
+  isTableHover,
   emphasis,
   maxvalue,
+  renderCustomContent,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>("id");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [sortedTableData, setTableData] = useState(tableData);
 
   useEffect(() => {
-    // Whenever tableData changes, reset the sortedTableData
     setTableData(tableData);
   }, [tableData]);
 
@@ -50,7 +53,7 @@ const Table: React.FC<TableComponentProps> = ({
     <div className="overflow-x-auto text-xl min-w-[100%] max-h-[100%] rounded-2xl shadow-2xl">
       <table
         className={`${
-          !isHover && "hover:text-slate-600"
+          isTableHover && "hover:text-slate-600 hover:cursor-pointer"
         } min-w-full bg-white border border-gray-300 border-separate`}
       >
         <thead className="bg-gray-200 sticky top-0 rounded-3xl">
@@ -76,8 +79,8 @@ const Table: React.FC<TableComponentProps> = ({
             <tr
               key={rowIndex}
               className={`${
-                isHover && "hover:bg-slate-100"
-              }  cursor-pointer`}
+                isHover && "hover:bg-slate-100 cursor-pointer"
+              }  `}
             >
               {tableStructure.map((column) => (
                 <td
@@ -92,7 +95,9 @@ const Table: React.FC<TableComponentProps> = ({
                     handleRowClick && handleRowClick(row.id)
                   }
                 >
-                  {row[column.name]}
+                  {renderCustomContent && renderCustomContent(column.name, row)
+                    ? renderCustomContent(column.name, row)
+                    : row[column.name]}
                 </td>
               ))}
             </tr>

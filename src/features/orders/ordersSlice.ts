@@ -21,9 +21,9 @@ const initialState: OrdersState = {
   orders: {},
 };
 
+// Fetch orders from localStorage
 export const fetchOrders = createAsyncThunk('orders/fetchOrders', async (email: string) => {
   const orders = JSON.parse(localStorage.getItem('Orders') || '{}');
-  console.log("hello",orders[email])
   return orders[email] || [];
 });
 
@@ -33,18 +33,29 @@ const ordersSlice = createSlice({
   reducers: {
     addOrder(state, action: PayloadAction<{ email: string; products: ProductOrder[] }>) {
       const { email, products } = action.payload;
+      
+      // Get existing orders from localStorage
+      const existingOrders = JSON.parse(localStorage.getItem('Orders') || '{}');
+
       const newOrder: Order = {
-        orderId:generateNumericUUIDNumber(),
+        orderId: generateNumericUUIDNumber(),
         products,
-        status:"Placed"
+        status: 'Placed',
       };
-      if (!state.orders[email]) {
-        state.orders[email] = [];
+
+      // Merge state orders with localStorage orders
+      if (!existingOrders[email]) {
+        existingOrders[email] = [];
       }
-      state.orders[email].push(newOrder);
+
+      // Add the new order to the correct user's orders
+      existingOrders[email].push(newOrder);
 
       // Update localStorage
-      localStorage.setItem('Orders', JSON.stringify(state.orders));
+      localStorage.setItem('Orders', JSON.stringify(existingOrders));
+
+      // Update the slice state as well
+      state.orders = existingOrders;
     },
   },
   extraReducers: (builder) => {

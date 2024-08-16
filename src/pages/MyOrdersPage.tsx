@@ -34,7 +34,7 @@ const MyOrdersPage = () => {
             <Sidebar />
             <div className='flex flex-col max-w-[60%] md:min-w-[90%] h-full items-center justify-center text-gray'>
               <Breadcrumbs />
-              <div className='min-h-[400px] min-w-full  flex flex-col items-center my-16 justify-center'>
+              <div className='min-h-[400px] md:max-w-[80%]  flex flex-col items-center my-16 justify-center'>
                 {orders.length > 0 ?orders.map((order) => (
                   <OrderBox 
                     key={order.orderId} 
