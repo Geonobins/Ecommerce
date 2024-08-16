@@ -60,7 +60,7 @@ export const TableFilter = ({ isOpen, handleCloseFilter, visibleColumns, setVisi
                           <input
                             type="checkbox"
                             id={columnName}
-                            defaultChecked
+                            defaultChecked={visibleColumns.includes(columnName)}
                             onChange={() => handleCheckboxChange(columnName)}
                             className="mr-2"
                           />
