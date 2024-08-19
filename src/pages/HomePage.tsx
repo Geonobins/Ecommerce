@@ -33,7 +33,7 @@ function HomePage() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      { showNotification && <Notification msg = {notificationMessage}/>}
+      { showNotification && <Notification msg = {notificationMessage} status="message"/>}
       <center>
         <div className=" h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%] my-24">
           
