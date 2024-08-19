@@ -2,7 +2,7 @@
 "use client";
 
 import { Toast } from "flowbite-react";
-import { HiCheck,HiExclamation, HiX } from "react-icons/hi";
+import { HiCheck,HiExclamation} from "react-icons/hi";
  type NotificationProps = {
   msg:string
   status:string

@@ -65,8 +65,14 @@ export default function ShoppingCart() {
   }, 0);
 
   const handleCheckout = () => {
-    navigate("/home/products/checkout", { state: { totalPrice: price } });
-    dispatch(closeCart());
+    if(cartItems.length>0){
+      navigate("/home/products/checkout", { state: { totalPrice: price } });
+      dispatch(closeCart());
+    }
+    else{
+      dispatch(closeCart());
+    }
+    
   };
 
   const handleCloseCart = () => {

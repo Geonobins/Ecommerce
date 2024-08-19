@@ -34,7 +34,7 @@ const CheckoutPage = () => {
         dispatch(clearCart())
       }
       // Proceed with checkout, e.g., redirect to a success page
-      navigate("/home", { state: { showNotification: true, message: "Your order has been placed!" } });
+      navigate("/home/", { state: { showNotification: true, message: "Your order has been placed!" } });
       
     }
   }

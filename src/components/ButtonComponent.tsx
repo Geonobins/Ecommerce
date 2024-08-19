@@ -9,7 +9,7 @@ const ButtonComponent = ({bg,cl,value}:ButtonComponentProps) => {
   return (
     <div>
       <button
-        className={`px-3 py-1 rounded-lg ${bg}  hover:bg-blue-100  ${cl}`}>
+        className={`px-3 py-1 rounded-lg ${bg}  hover:bg-blue-100 duration-300  ${cl}`}>
         {value}
       </button>
     </div>

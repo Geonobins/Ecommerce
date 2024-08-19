@@ -1,43 +1,38 @@
-import {  useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Bag from "../icons/shopping-bag.png";
 import Logo from './Logo';
-import CartButton from './CartButton';import ButtonComponent from './ButtonComponent';
-
+import CartButton from './CartButton';
+import ButtonComponent from './ButtonComponent';
 import Profile from './ProfileButton';
 import { useAuth0 } from '@auth0/auth0-react';
-
 import { getCartQuantity, openCart } from '@/features/cart/cartSlice';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 
 type NavbarProps = {
-  setSearchQuery?: (arg:string)=>(void)
+  setSearchQuery?: (arg: string) => void;
 }
 
-
 const Navbar = ({ setSearchQuery }: NavbarProps) => {
-  
   const [search, setSearch] = useState('');
-  const [isOpen,setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const cartQuantity = useSelector((state: RootState) => getCartQuantity(state));
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
+  const location = useLocation(); // Get the current location
   const { isAuthenticated } = useAuth0();
+  
   const handleCart = () => {
-    
     if (isAuthenticated) {
-      
       dispatch(openCart());
     } else {
-      alert("Login to manage cart")
+      alert("Login to manage cart");
     }
   };
 
-  const handleNavigation = (str: string) => {
-    navigate(`/home/${str}`);
+  const handleNavigation = (path: string) => {
+    navigate(`/home/${path}`);
   };
 
   const handleSearchChange = (e: { target: { value: string }; }) => {
@@ -45,11 +40,22 @@ const Navbar = ({ setSearchQuery }: NavbarProps) => {
     setSearchQuery && setSearchQuery(e.target.value);
   };
 
+  // Define paths for comparison
+  const paths = {
+    home: '/home/',
+    allProducts: '/home/all%20products',
+    livingRoom: '/home/Living%20Room',
+    dining: '/home/Dining',
+    bedroom: '/home/Bedroom',
+  };
 
+  const isHomepage = location.pathname === '/home' || location.pathname === '/home/';
+  // Determine the active path
+  const getButtonClass = (path: string) => location.pathname === path ? 'md:bg-slate-300 h-1.5 animate-grow duration-300 ' : '';
 
   return (
-    <nav className="flex items-center justify-between flex-wrap p-6 fixed top-0 bg-white min-w-[100%] z-40 shadow-sm"  >
-      <div className="flex items-center flex-shrink-0 text-gray-600 mr-6 lg:mr-72">
+    <nav className="flex items-center justify-between flex-wrap fixed top-0 bg-white min-w-[100%] z-40 shadow-sm">
+      <div className="flex items-center m-6 flex-shrink-0 text-gray-600 mr-6 lg:mr-72">
         <Logo />
       </div>
       <div className="block md:hidden">
@@ -74,49 +80,45 @@ const Navbar = ({ setSearchQuery }: NavbarProps) => {
         </button>
       </div>
       <div
-        className={`w-full block flex-grow md:flex md:items-center md:w-auto ${isOpen ? "block" : "hidden"}`}
+        className={`w-full block flex-grow md:flex md:w-auto ${isOpen ? "block" : "hidden"}`}
       >
-        <div className="text-sm md:flex-grow">
-          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("") }}>
-            <ButtonComponent value="Home" bg="" />
+        <div className="md:flex text-sm md:flex-grow min-h-full items-center">
+          <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("") }}>
+            <ButtonComponent value="Home" cl="hover:bg-slate-50 " />
+            <div className={`w-full  md:mt-9 ${getButtonClass(paths.home)}`}></div>
           </div>
-          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("all products") }}>
-            <ButtonComponent value="All Products" />
+          <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("all products") }}>
+            <ButtonComponent value="All Products" cl="hover:bg-slate-50"/>
+            <div className={`w-full md:mt-9 ${getButtonClass(paths.allProducts)}`}></div>
           </div>
-          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("Living Room") }}>
-            <ButtonComponent value="Living" />
+          <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("Living Room") }}>
+            <ButtonComponent value="Living" cl="hover:bg-slate-50"/>
+            <div className={`w-full md:mt-9 ${getButtonClass(paths.livingRoom)}`}></div>
           </div>
-          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("Dining") }}>
-            <ButtonComponent value="Dining" />
+          <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("Dining") }}>
+            <ButtonComponent value="Dining"  cl="hover:bg-slate-50"/>
+            <div className={`w-full md:mt-9 ${getButtonClass(paths.dining)}`}></div>
           </div>
-          <div className="block mt-4 md:inline-block md:mt-0 text-white-200 mr-4" onClick={() => { handleNavigation("Bedroom") }}>
-            <ButtonComponent value="Bedroom" />
+          <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("Bedroom") }}>
+            <ButtonComponent value="Bedroom" cl="hover:bg-slate-50"/>
+            <div className={`w-full md:mt-9 ${getButtonClass(paths.bedroom)}`}></div>
           </div>
         </div>
-        <div className='flex flex-row gap-4'>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={search}
-            onChange={handleSearchChange}
-            className="border border-gray-300 rounded-md p-2"
-          />
+        <div className='flex flex-row gap-4 m-6'>
+          {/* Conditionally render the search input */}
+          { !isHomepage && (
+            <input
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={handleSearchChange}
+              className="border border-gray-300 rounded-md p-2"
+            />
+          )}
           <Profile />
           <div onClick={handleCart}>
             <CartButton src={Bag} quantity={cartQuantity} />
           </div>
-          {/* <div onClick={handleLogin}>
-            <ButtonComponent value={user ? "Logout" : "Login"} bg="bg-gray-200" />
-          </div>
-          {user && (
-            <div>
-              <h2>{user.name}</h2>
-            </div>
-          )}
-
-          <div onClick={handleLogout}>
-            <ButtonComponent value="Logout" bg="bg-gray-200" />
-          </div> */}
         </div>
       </div>
     </nav>
