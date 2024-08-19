@@ -28,7 +28,7 @@ export const ProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState(''); // State for sorting order
 
-  const { navStatus } = useParams<{ navStatus: string | undefined | any }>();
+  const navStatus  = useParams<{ navStatus?: string }>().navStatus ?? 'all products';;
 
   const { user } = useAuth0();
 

@@ -13,6 +13,15 @@ import ConfirmModal from '@/components/ConfirmModal';
 import { increaseItemQuantity, openCart, removeFromCart } from '../features/cart/cartSlice'
 import {useDispatch} from 'react-redux'
 import Breadcrumbs from '@/components/Breadcrumbs';
+
+type ReviewProps = {
+  id: string;
+  user: string;
+  rating: number;
+  review: string;
+  date: string;
+};
+
 interface Product {
   id: number
   name: string
@@ -21,7 +30,7 @@ interface Product {
   thumbnail: string
   image: [string]
   availability: number
-  reviews: [{ id: number, user: string, rating: number, review: string, date: string }]
+  reviews: ReviewProps[]
   category: [string]
   subcategory: string
 }

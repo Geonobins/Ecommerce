@@ -1,5 +1,8 @@
-
-const CartButton = (props: any) => {
+type CartButtonProps={
+  src:string;
+  quantity:number;
+}
+const CartButton = (props: CartButtonProps) => {
   return (
     <div>
       <button className="px-3 py-1 rounded-lg bg-gray-300 hover:bg-gray-500 relative">

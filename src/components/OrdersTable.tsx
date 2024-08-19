@@ -25,7 +25,7 @@ const OrdersTable: React.FC = () => {
       const userOrders = storedOrders[userEmail];
 
       if (Array.isArray(userOrders)) {
-        userOrders.forEach((order: any) => {
+        userOrders.forEach((order) => {
           const products = Array.isArray(order.products)
             ? order.products
                 .map((product: Product) => `${product.id} (Qty: ${product.quantity})`)
@@ -61,7 +61,7 @@ const OrdersTable: React.FC = () => {
 
     for (const userEmail in storedOrders) {
       const userOrders = storedOrders[userEmail];
-      userOrders.forEach((order: any) => {
+      userOrders.forEach((order: { orderId: string; status: string; }) => {
         if (order.orderId === orderId) {
           order.status = order.status === "Placed" ? "Shipped" : "Placed";
         }

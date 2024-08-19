@@ -6,25 +6,35 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
-export function CarouselOrientation({ reviews }: any) {
+// Define the type for each review
+type ReviewProps = {
+  id: string;
+  user: string;
+  rating: number;
+  review: string;
+  date: string;
+};
 
-  if (reviews.length===0){
-    return(
-      <div>No reviews Yet</div>
-    )
+// Define the props for the CarouselOrientation component
+type CarouselOrientationProps = {
+  reviews: ReviewProps[];
+};
+
+// Component to render the carousel with reviews
+export function CarouselOrientation({ reviews }: CarouselOrientationProps) {
+  if (reviews.length === 0) {
+    return <div>No reviews yet</div>;
   }
+
   return (
     <Carousel
-      opts={{
-        align: "center",
-      }}
+      opts={{ align: "center" }}
       orientation="horizontal"
-      className="w-full max-w-[75%] "
+      className="w-full max-w-[75%]"
     >
       <CarouselContent className="-mt-1 h-[200px]">
-        {reviews.map((review: { id: Key | null | undefined; user: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; rating: number; review: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; date: string | number | Date; }) => (
+        {reviews.map((review) => (
           <CarouselItem key={review.id} className="pt-1 md:basis-1/2">
             <div className="p-1">
               <Card>
@@ -34,7 +44,7 @@ export function CarouselOrientation({ reviews }: any) {
                   </div>
                   <div className="mb-2">
                     <span className="text-yellow-500">
-                      {"★".repeat(review.rating)}{" "}
+                      {"★".repeat(review.rating)}
                       {"☆".repeat(5 - review.rating)}
                     </span>
                   </div>

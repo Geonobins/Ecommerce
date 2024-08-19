@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import {  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Bag from "../icons/shopping-bag.png";
 import Logo from './Logo';
@@ -11,9 +11,12 @@ import { getCartQuantity, openCart } from '@/features/cart/cartSlice';
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/app/store';
 
+type NavbarProps = {
+  setSearchQuery?: (arg:string)=>(void)
+}
 
 
-const Navbar = ({ setSearchQuery }: any) => {
+const Navbar = ({ setSearchQuery }: NavbarProps) => {
   
   const [search, setSearch] = useState('');
   const [isOpen,setIsOpen] = useState(false)
@@ -26,7 +29,7 @@ const Navbar = ({ setSearchQuery }: any) => {
   const handleCart = () => {
     
     if (isAuthenticated) {
-      console.log("hai cart")
+      
       dispatch(openCart());
     } else {
       alert("Login to manage cart")
@@ -37,9 +40,9 @@ const Navbar = ({ setSearchQuery }: any) => {
     navigate(`/home/${str}`);
   };
 
-  const handleSearchChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+  const handleSearchChange = (e: { target: { value: string }; }) => {
     setSearch(e.target.value);
-    setSearchQuery(e.target.value);
+    setSearchQuery && setSearchQuery(e.target.value);
   };
 
 

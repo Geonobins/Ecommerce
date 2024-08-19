@@ -7,7 +7,15 @@ import ButtonComponent from './ButtonComponent';
 import Cart from '../icons/shopping-cart.png';
 import { RootState } from '@/app/store';
 
-const Card = (props: any) => {
+
+type CardProps={
+  id:number
+  image:string;
+  name:string;
+  description:string;
+  price:number;
+}
+const Card = (props: CardProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated } = useAuth0();

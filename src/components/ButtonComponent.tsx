@@ -1,11 +1,16 @@
 
+type ButtonComponentProps={
+  bg?:string;
+  cl?:string;
+  value?:string;
+}
 
-const ButtonComponent = (props: any) => {
+const ButtonComponent = ({bg,cl,value}:ButtonComponentProps) => {
   return (
     <div>
       <button
-        className={`px-3 py-1 rounded-lg ${props.bg}  hover:bg-blue-100  ${props.cl}`}>
-        {props.value}
+        className={`px-3 py-1 rounded-lg ${bg}  hover:bg-blue-100  ${cl}`}>
+        {value}
       </button>
     </div>
   )
