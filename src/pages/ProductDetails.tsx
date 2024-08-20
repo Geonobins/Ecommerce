@@ -130,7 +130,7 @@ const ProductDetails = () => {
       <div className='flex-1'>
         <Navbar />
         {/* <div className='flex flex-col my-20 items-center p-10'> */}
-        
+        <div className='sm:mt-48 2xl:mt-24'>
         <Breadcrumbs/>
         <div className="max-w-7xl w-full mx-auto my-24 shadow-md px-4">
           
@@ -158,7 +158,7 @@ const ProductDetails = () => {
                     alt=""
                     className={`w-22.5 h-16 object-cover border border-gray-300 mr-1.25 rounded-lg ${idx === index ? 'opacity-100 border-lightseagreen' : 'opacity-70'
                       }`}
-                    onClick={() => handleTab(idx)}
+                    onMouseEnter={() => handleTab(idx)}
                   />
                 ))}
               </div>
@@ -196,6 +196,7 @@ const ProductDetails = () => {
         <div className="mx-24">
           <h1 className='text-zinc-500 mr-2 py-8 font-serif text-2xl ' >Related Products</h1>
           <ProductCarousel category={product.subcategory} />
+        </div>
         </div>
       </div>
       {/* </div> */}

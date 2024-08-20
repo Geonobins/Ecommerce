@@ -7,6 +7,7 @@ import {useDispatch, useSelector } from 'react-redux'
 import { useAuth0 } from '@auth0/auth0-react';
 import { addOrder } from '@/features/orders/ordersSlice';
 import { clearCart } from '@/features/cart/cartSlice';
+import { decreaseProductAvailability, initDB } from '@/utils/db';
 const CheckoutPage = () => {
 
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,6 @@ const CheckoutPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { totalPrice } = location.state || { totalPrice: 0 };
-  console.log(totalPrice)
 
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   let products = [];
@@ -24,18 +24,29 @@ const CheckoutPage = () => {
     products = [{ id: Number(id), quantity: 1 }]
   } else {
     products = cartItems;
-    console.log(products)
   }
-  const handleCheckout = ()=>
+  const handleCheckout = async ()=>
   {
-    if (user?.email) {
-      dispatch(addOrder({ email: user.email, products }));
-      if(!id){
-        dispatch(clearCart())
+    try {
+      const db = await initDB(); // Initialize IndexedDB
+
+      // Loop through each product in the cart and decrease availability
+      for (const product of products) {
+        console.log("Hello",products)
+        await decreaseProductAvailability(db, product.id, product.quantity);
       }
-      // Proceed with checkout, e.g., redirect to a success page
-      navigate("/home/", { state: { showNotification: true, message: "Your order has been placed!" } });
-      
+
+      if (user?.email) {
+        dispatch(addOrder({ email: user.email, products }));
+        if (!id) {
+          dispatch(clearCart());
+        }
+        // Redirect to success page
+        navigate("/home/", { state: { showNotification: true, message: "Your order has been placed!" } });
+      }
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      // Handle errors, such as product out of stock
     }
   }
 

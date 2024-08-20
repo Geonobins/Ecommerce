@@ -53,3 +53,20 @@ export const deleteProduct = async (db: any, id: any) => {
   await tx.done;
   
 };
+
+export const decreaseProductAvailability = async (db: any, id: any, quantity: number) => {
+  const tx = db.transaction(STORE_NAME, 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+
+  const product = await store.get(id);
+
+  if (product && product.availability >= quantity) {
+    product.availability -= quantity; // Decrease the stock by quantity
+    await store.put(product); // Update the product with the new stock
+  } else {
+    console.error('Product out of stock or insufficient quantity');
+    throw new Error('Product out of stock');
+  }
+
+  await tx.done;
+};
