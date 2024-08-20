@@ -9,6 +9,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { getCartQuantity, openCart } from '@/features/cart/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
+import useTranslations from '@/hooks/useTranslations';
 
 type NavbarProps = {
   setSearchQuery?: (arg: string) => void;
@@ -22,6 +23,8 @@ const Navbar = ({ setSearchQuery }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
   const { isAuthenticated } = useAuth0();
+  
+  const t = useTranslations();
   
   const handleCart = () => {
     if (isAuthenticated) {
@@ -84,23 +87,23 @@ const Navbar = ({ setSearchQuery }: NavbarProps) => {
       >
         <div className="md:flex text-sm md:flex-grow min-h-full items-center">
           <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("") }}>
-            <ButtonComponent value="Home" cl="hover:bg-slate-50 " />
+            <ButtonComponent value={t["Home"]} cl="hover:bg-slate-50 " />
             <div className={`w-full  md:mt-9 ${getButtonClass(paths.home)}`}></div>
           </div>
           <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("all products") }}>
-            <ButtonComponent value="All Products" cl="hover:bg-slate-50"/>
+            <ButtonComponent value={t["All Products"]} cl="hover:bg-slate-50"/>
             <div className={`w-full md:mt-9 ${getButtonClass(paths.allProducts)}`}></div>
           </div>
           <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("Living Room") }}>
-            <ButtonComponent value="Living" cl="hover:bg-slate-50"/>
+            <ButtonComponent value={t["Living"]} cl="hover:bg-slate-50"/>
             <div className={`w-full md:mt-9 ${getButtonClass(paths.livingRoom)}`}></div>
           </div>
           <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("Dining") }}>
-            <ButtonComponent value="Dining"  cl="hover:bg-slate-50"/>
+            <ButtonComponent value={t["Dining"]}  cl="hover:bg-slate-50"/>
             <div className={`w-full md:mt-9 ${getButtonClass(paths.dining)}`}></div>
           </div>
           <div className="block h-full md:pt-8 mt-4 md:inline-block md:mt-0 text-white-200 mr-4 hover:bg-slate-50 duration-300 cursor-pointer" onClick={() => { handleNavigation("Bedroom") }}>
-            <ButtonComponent value="Bedroom" cl="hover:bg-slate-50"/>
+            <ButtonComponent value={t["Bedroom"]} cl="hover:bg-slate-50"/>
             <div className={`w-full md:mt-9 ${getButtonClass(paths.bedroom)}`}></div>
           </div>
         </div>
@@ -109,7 +112,7 @@ const Navbar = ({ setSearchQuery }: NavbarProps) => {
           { !isHomepage && (
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={`${t["Search"]}...`}
               value={search}
               onChange={handleSearchChange}
               className="border border-gray-300 rounded-md p-2"

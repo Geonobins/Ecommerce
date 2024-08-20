@@ -6,6 +6,7 @@ import CartButton from './CartButton';
 import ButtonComponent from './ButtonComponent';
 import Cart from '../icons/shopping-cart.png';
 import { RootState } from '@/app/store';
+import useTranslations from '@/hooks/useTranslations';
 
 
 type CardProps={
@@ -18,6 +19,7 @@ type CardProps={
 const Card = (props: CardProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const t = useTranslations();
   const { isAuthenticated } = useAuth0();
   const quantity = useSelector((state: RootState) => getItemQuantity(state, props.id));
   const handleClick = () => {
@@ -64,7 +66,7 @@ const Card = (props: CardProps) => {
 
       <div className="flex items-center justify-center mb-3 gap-2">
         <div onClick={handleBuyNow}>
-          <ButtonComponent value="Buy Now" bg="bg-gray-300" />
+          <ButtonComponent value={t["Buy Now"]} bg="bg-gray-300" />
         </div>
         <div onClick={handleIncreaseCart}>
           <CartButton quantity={quantity} src={Cart} />

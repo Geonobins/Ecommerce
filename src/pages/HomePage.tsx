@@ -10,12 +10,15 @@ import { FooterComponent } from "@/components/FooterComponent";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Notification } from "@/components/Notification";
+import useTranslations from "@/hooks/useTranslations";
 
 
 function HomePage() {
   const location = useLocation();
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
+
+  const t= useTranslations();
 
   useEffect(() => {
     if (location.state?.showNotification) {
@@ -47,7 +50,7 @@ function HomePage() {
         </div>
       </center>
       <div className="mx-24">
-        <h1 className='text-zinc-500 mr-2 py-8 font-serif text-2xl ' >Trending Products</h1>
+        <h1 className='text-zinc-500 mr-2 py-8 font-serif text-2xl ' >{t["Trending Products"]}</h1>
         <ProductCarousel subcategory="" />
 
       </div>

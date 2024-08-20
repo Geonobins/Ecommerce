@@ -13,6 +13,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import { increaseItemQuantity, openCart, removeFromCart } from '../features/cart/cartSlice'
 import {useDispatch} from 'react-redux'
 import Breadcrumbs from '@/components/Breadcrumbs';
+import useTranslations from '@/hooks/useTranslations';
 
 type ReviewProps = {
   id: string;
@@ -37,7 +38,9 @@ interface Product {
 
 const ProductDetails = () => {
 
-  const [cartStatus, setCartStatus] = useState("Add to Cart")
+  const t = useTranslations();
+
+  const [cartStatus, setCartStatus] = useState(t["Add to Cart"])
 
   const [products, setProducts] = useState<Product[]>([])
 
@@ -45,7 +48,7 @@ const ProductDetails = () => {
 
   const dispatch = useDispatch()
 
-
+  
 
   // useEffect(() => {
   //   console.log('Fetching products...');
@@ -98,7 +101,7 @@ const ProductDetails = () => {
   // const quantity = getItemQuantity(product.id)
 
   const handleAddtoCart = () => {
-    setCartStatus("Go to Cart")
+    setCartStatus(t["Go to Cart"])
     dispatch(increaseItemQuantity(product.id))
   }
   const handleGoToCart = () => {
@@ -163,11 +166,11 @@ const ProductDetails = () => {
                 ))}
               </div>
               <div className='py-2 px-2 space-x-1 flex'>
-                <div onClick={cartStatus === "Go to Cart" ? handleGoToCart : handleAddtoCart}>
+                <div onClick={cartStatus === "Go to Cart" || cartStatus === "Ir al carrito" ? handleGoToCart : handleAddtoCart}>
                   <ButtonComponent value={cartStatus} bg="bg-black" cl="text-white" />
                 </div>
                 <div onClick={handleBuyNow}>
-                  <ButtonComponent value="Buy Now" bg="bg-black" cl="text-white" />
+                  <ButtonComponent value={t["Buy Now"]} bg="bg-black" cl="text-white" />
                 </div>
 
               </div>

@@ -20,6 +20,7 @@ import Dashboard from './pages/Dashboard';
 import useThunkDispatch from './hooks/useThunkDispatch';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrdersList from './pages/OrdersList';
+import Settings from './pages/Settings';
 
 
 
@@ -91,6 +92,7 @@ const App = () => {
         <Route path="/home/profile/dashboard" element={isAdmin? <Dashboard /> : <NotFoundPage/>} />
         <Route path="/home/profile/actions" element={isAdmin?<Actions /> : <NotFoundPage/>} />
         <Route path="/home/profile/myorders" element={<MyOrdersPage />} />
+        <Route path="/home/profile/settings" element={<Settings />} />
         <Route path="/home/profile/orderslist" element={<OrdersList />} />
         <Route path="/home/products/:productId" element={<ProductDetails />} />
         <Route path="/home/products/:id/checkout" element={<CheckoutPage />} />

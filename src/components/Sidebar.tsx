@@ -5,22 +5,26 @@ import { RiSettings4Line } from "react-icons/ri";
 import { AiOutlineUser } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { BoxIcon, ListIcon } from "lucide-react";
+import { BoxIcon, ListIcon, SettingsIcon } from "lucide-react";
+import useTranslations from "@/hooks/useTranslations";
 
 const Sidebar = () => {
   const {user} = useAuth0()
   const isAdmin = user?.nickname === "admin";
 
+  const t = useTranslations();
+
   const menus = [
-    { name: "User", link: "/home/profile", icon: AiOutlineUser },
+    { name: t["User"], link: "/home/profile", icon: AiOutlineUser },
     ...(isAdmin
       ? [
-          { name: "Dashboard", link: "/home/profile/dashboard", icon: MdOutlineDashboard },
-          { name: "Inventory", link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
-          { name: "Orders", link: "/home/profile/orderslist", icon: ListIcon },
+          { name: t["Dashboard"], link: "/home/profile/dashboard", icon: MdOutlineDashboard },
+          { name: t["Inventory"], link: "/home/profile/actions", icon: RiSettings4Line, margin: true },
+          { name: t["Orders"], link: "/home/profile/orderslist", icon: ListIcon },
         ]
       : []),
-      {name: "My Orders", link: "/home/profile/myorders", icon: BoxIcon}
+      {name: t["My Orders"], link: "/home/profile/myorders", icon: BoxIcon},
+      {name: t["Settings"], link: "/home/profile/settings", icon: SettingsIcon}
   ];
   const [open, setOpen] = useState(false);
 
