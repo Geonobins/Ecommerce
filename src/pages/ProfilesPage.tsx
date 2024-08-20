@@ -19,11 +19,12 @@ const ProfilesPage = () => {
             <Sidebar/>
             <div className='w-full flex flex-col items-center justify-center text-gray-'>
                 <Breadcrumbs/>
-                <div className='flex items-center justify-center w-full h-full'>
-                    <UserRoundIcon className='size-44'/>
-                </div>
-            <p>{user?.nickname}</p>
+                <div className='flex flex-col items-center justify-center w-full h-full'>
+                    <UserRoundIcon className='size-44 '/>
+                    <p>{user?.nickname}</p>
             <p>{user?.email}</p>
+                </div>
+            
             </div>
             </div>
             

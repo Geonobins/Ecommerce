@@ -25,7 +25,7 @@ const Sidebar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="flex gap-6 p-2 sticky">
+    <section className="flex md:mt-36 xl:mt-0 gap-6 p-2 sticky">
       <div
         className={`bg-slate-100 min-h-screen rounded-xl ${open ? "md:w-72" : "w-16"} duration-500 text-slate-400 px-4 shadow-xl` }
       >

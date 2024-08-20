@@ -50,13 +50,13 @@ const Card = (props: CardProps) => {
   };
   return (
     <div
-      className="w-60 p-2 min-h-96 mx-1 flex flex-col justify-between bg-white rounded-x1 transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl mt-4 mb-4 lg:mt-0"
+      className="w-60 p-2 min-h-96 max-h-96 mx-1 flex flex-col justify-between bg-white rounded-x1 transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl mt-4 mb-4 lg:mt-0"
       onClick={handleClick}
     >
       <div>
         <img src={props.image} alt={props.name} className="max-h-40 w-full object-cover object-center rounded-xl" />
         <div className="p-2">
-          <h2 className="font-bold text-lg mb-2">{props.name}</h2>
+          <h2 className="font-bold text-lg mb-2 line-clamp-2">{props.name}</h2>
           <h3 className="font-bold text-lg mb-2">${props.price}</h3>
           <p className="text-sm text-gray-600 mt-2 mb-2 line-clamp-2">{props.description}</p>
         </div>

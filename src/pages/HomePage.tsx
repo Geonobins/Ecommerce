@@ -1,8 +1,8 @@
 "use client";
 import Navbar from "@/components/Navbar"
 import { Carousel } from "flowbite-react";
-import Banner1 from "../images/Banner1.png"
-import Banner2 from "../images/Banner2.png"
+import Banner1 from "../images/Banner1.webp"
+import Banner2 from "../images/Banner2.jpg"
 import Banner3 from "../images/Banner3.png"
 import Banner4 from "../images/Banner4.png"
 import { ProductCarousel } from "@/components/ProductCarousel";
@@ -35,7 +35,7 @@ function HomePage() {
       <Navbar />
       { showNotification && <Notification msg = {notificationMessage} status="message"/>}
       <center>
-        <div className=" h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%] my-24">
+        <div className=" h-96 sm:h-64 xl:h-80 2xl:h-96  max-w-[90%] my-24 md:mt-52 xl:mt-24">
           
           <Carousel slideInterval={2000} pauseOnHover={true} className="snap-x snap-mandatory"  >
             <img src={Banner1} alt="..." className="w-full h-full object-fill" />
